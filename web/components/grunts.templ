@@ -1,0 +1,166 @@
+package components
+
+import (
+    "github.com/Jojojojodr/bonfirec2"
+)
+
+templ GruntsHeader() {
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-200 shadow-lg shadow-emerald-950/20 backdrop-blur">
+                <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+                Active grunts
+            </div>
+            <div>
+                <h1 class="mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+                    List of all active grunts
+                </h1>
+                <p class="mt-3 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
+                    Monitor and manage all active grunts in the system.
+                </p>
+            </div>
+        </div>
+    </div>
+}
+
+templ GruntsTable() {
+    <div class="rounded-3xl border border-slate-700/60 bg-slate-900/85 p-5 shadow-xl shadow-slate-950/40 backdrop-blur">
+        <h2 class="text-lg font-semibold text-white">Active grunts</h2>
+        <p class="mt-1 text-sm text-slate-400">List of all active grunts in the system.</p>
+        <div class="mt-4 overflow-x-auto">
+            <table class="w-full table-auto border-collapse overflow-hidden rounded-2xl border border-slate-600/55 bg-slate-950/45 backdrop-blur-md">
+                <thead>
+                    <tr class="border-b border-slate-600/60 bg-slate-900/55 text-left text-sm font-semibold text-slate-300 backdrop-blur-sm">
+                        <th class="px-4 py-2">Grunt ID</th>
+                        <th class="px-4 py-2">Listener ID</th>
+                        <th class="px-4 py-2">Status</th>
+                        <th class="px-4 py-2">Last Check-in</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    for _, grunt := range bonfirec2.Grunts {
+                        @gruntRow(grunt)
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+templ GruntView(grunt *bonfirec2.Grunt) {
+    <div class="rounded-3xl border border-slate-700/60 bg-slate-900/85 p-5 shadow-xl shadow-slate-950/40 backdrop-blur">
+        <h2 class="text-lg font-semibold text-white">Grunt Detail</h2>
+        <p class="mt-1 text-sm text-slate-400">Details of the selected grunt.</p>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div class="flex gap-4 sm:col-span-2 xl:col-span-3">
+                <div class="flex flex-row gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur sm:flex-row" style="width: 50%;">
+                    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Grunt ID</p>
+                        <p class="mt-2 break-all text-sm font-semibold text-white">{grunt.ID}</p>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Listener ID</p>
+                        <p class="mt-2 break-all text-sm font-semibold text-white">{grunt.ListenerID}</p>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4 sm:col-span-2 xl:col-span-3">
+                    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Status</p>
+                        <p class="mt-2 text-sm font-semibold text-emerald-300">{grunt.Status}</p>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                        <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Last Check-in</p>
+                        <p class="mt-2 text-sm font-semibold text-white">{grunt.LastCheckIn}</p>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                    <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Created At</p>
+                    <p class="mt-2 text-sm font-semibold text-white">{grunt.CreatedAt}</p>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                    <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Updated At</p>
+                    <p class="mt-2 text-sm font-semibold text-white">{grunt.UpdatedAt}</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2 sm:col-span-2 xl:col-span-3">
+                <span class="text-sm font-semibold text-slate-300">Terminal:</span>
+                <div class="overflow-hidden rounded-2xl border border-emerald-500/35 bg-black/85 shadow-inner shadow-emerald-950/40">
+                    <div class="flex items-center justify-between border-b border-emerald-500/25 bg-emerald-950/30 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-300">
+                        <span>BonFire C2 shell</span>
+                        <span class="inline-flex items-center gap-2 text-emerald-200">
+                            <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+                            live
+                        </span>
+                    </div>
+
+                    <div
+                        id="grunt-terminal-output"
+                        class="max-h-[22rem] min-h-[16rem] overflow-y-auto p-4 font-mono text-sm leading-6"
+                        hx-get={ "/actions/partials/grunts/terminal/messages?id=" + grunt.ID }
+                        hx-trigger="load, every 2s"
+                        hx-swap="innerHTML">
+                        @GruntTerminalMessages(grunt)
+                    </div>
+
+                    <form
+                        class="border-t border-emerald-500/25 bg-slate-950/70 p-3"
+                        hx-post={ "/actions/grunts/terminal/command?id=" + grunt.ID }
+                        hx-target="#grunt-terminal-output"
+                        hx-swap="innerHTML"
+                        hx-on:htmx:after-request="this.reset()">
+                        <div class="flex items-center gap-3">
+                            <span class="font-mono text-emerald-300">operator@bonfire:~$</span>
+                            <input
+                                name="command"
+                                type="text"
+                                autocomplete="off"
+                                placeholder="run command"
+                                class="w-full rounded-lg border border-emerald-500/30 bg-black/70 px-3 py-2 font-mono text-sm text-emerald-100 outline-none ring-0 placeholder:text-emerald-700 focus:border-emerald-400"
+                            />
+                            <button
+                                type="submit"
+                                class="rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-500/30">
+                                send
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+templ GruntTerminalMessages(grunt *bonfirec2.Grunt) {
+    if messages, err := grunt.GetMessages(); err == nil {
+        if len(messages) == 0 {
+            <div class="text-emerald-700">No output yet.</div>
+        }
+        for _, message := range messages {
+            if message.IsServerMessage {
+                <div class="whitespace-pre-wrap break-words text-cyan-300">operator> {message.Content}</div>
+            } else {
+                <div class="whitespace-pre-wrap break-words text-emerald-200">grunt> {message.Content}</div>
+            }
+        }
+    } else {
+        <div class="text-red-300">Failed to load terminal output.</div>
+    }
+}
+
+templ gruntRow(grunt *bonfirec2.Grunt) {
+    <tr class="border-b border-slate-700/45 bg-slate-950/30 hover:bg-slate-900/45"
+        hover:class="bg-slate-900/45 cursor-pointer"
+        role="link"
+        tabindex="0"
+        onclick={ directToGruntDetail(grunt.ID) }>
+        <td class="px-4 py-2 text-sm text-slate-200">{grunt.ID}</td>
+        <td class="px-4 py-2 text-sm text-slate-200">{grunt.ListenerID}</td>
+        <td class="px-4 py-2 text-sm text-slate-200">{grunt.Status}</td>
+        <td class="px-4 py-2 text-sm text-slate-200">{grunt.LastCheckIn}</td>
+    </tr>
+}
+
+script directToGruntDetail(gruntID string) {
+    window.location.href = "/grunts/g?id=" + gruntID
+}

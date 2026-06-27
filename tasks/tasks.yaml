@@ -1,0 +1,20 @@
+version: '3'
+
+tasks:
+  watch-css:
+    cmds:
+      - echo "Watching CSS with Tailwind..."
+      - npx tailwindcss -i ./static/css/input.css -o ./static/css/styles.css --watch
+    silent: true
+
+  build-css:
+    cmds:
+      - echo "Building CSS with Tailwind..."
+      - npx tailwindcss -i ./static/css/input.css -o ./static/css/styles.css --minify
+    silent: true
+  
+  run-air:
+    cmds:
+      - echo "Running Go application with Air..."
+      - air -c .air_{{ OS }}.toml
+    silent: true

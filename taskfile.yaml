@@ -1,0 +1,67 @@
+version: '3'
+
+includes:
+  os_specific: ./tasks/taskfile_{{ OS }}.yaml
+  tasks: ./tasks/tasks.yaml
+
+vars:
+  GO_BONFIRE_PATH: ./cmd/app/main.go
+  GO_CLIENT_PATH: ./cmd/client/main.go
+  EXECUTABLE_BONFIRE_PATH: ./bin/app/
+  EXECUTABLE_CLIENT_PATH: ./bin/client/
+
+tasks:
+  default:
+    cmds:
+      - echo "Running Go application..."
+      - templ generate
+      - task: tasks:watch-css
+      - go run {{.GO_BONFIRE_PATH}}
+    silent: true
+  
+  client:
+    cmds:
+      - echo "Starting client application..."
+      - go run {{.GO_CLIENT_PATH}}
+    silent: true
+
+  build:
+    cmds:
+      - echo "Building Go application for {{.GOOS}}/{{.GOARCH}}..."
+      - templ generate
+      - task: tasks:build-css
+      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -o {{.EXECUTABLE_BONFIRE_PATH}}{{.EXECUTABLE_BONFIRE_NAME}} {{.GO_BONFIRE_PATH}}
+      - GOOS={{.GOOS}} GOARCH={{.GOARCH}} go build -o {{.EXECUTABLE_CLIENT_PATH}}{{.EXECUTABLE_CLIENT_NAME}} {{.GO_CLIENT_PATH}}
+      - cp ./config.example.yaml {{.EXECUTABLE_BONFIRE_PATH}}config.yaml
+      - cp -r ./static/ {{.EXECUTABLE_BONFIRE_PATH}}
+      - rm ./{{.EXECUTABLE_BONFIRE_PATH}}/static/css/input.css
+    silent: true
+  
+  run:
+    cmds:
+      - echo "Running the application..."
+      - cd ./{{.EXECUTABLE_BONFIRE_PATH}} && ./{{.EXECUTABLE_BONFIRE_NAME}}
+    silent: true
+
+  run-client:
+    cmds:
+      - echo "Running client application..."
+      - cd ./{{.EXECUTABLE_CLIENT_PATH}} && ./{{.EXECUTABLE_CLIENT_NAME}}
+    silent: true
+
+  dev:
+    deps:
+      - task: tasks:watch-css
+      - task: tasks:run-air
+    silent: true
+
+  clean:
+    cmds:
+      - echo "Cleaning up build artifacts..."
+      - rm -rf ./tmp/
+      - rm -rf ./bin/
+      - rm -rf ./data/
+      - rm -rf ./node_modules/
+      - rm -rf ./static/css/styles.css
+      - echo "Clean completed."
+    silent: true

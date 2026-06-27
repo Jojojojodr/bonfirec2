@@ -1,0 +1,7 @@
+version:  '3'
+
+vars:
+  GOOS: windows
+  GOARCH: amd64
+  EXECUTABLE_BONFIRE_NAME: app.exe
+  EXECUTABLE_CLIENT_NAME: client.exe

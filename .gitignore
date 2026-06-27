@@ -1,0 +1,9 @@
+tmp/
+bin/
+data/
+node_modules/
+
+package-lock.json
+config.yaml
+
+**/styles.css

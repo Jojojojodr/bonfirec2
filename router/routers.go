@@ -1,0 +1,41 @@
+package router
+
+import (
+	"github.com/Jojojojodr/bonfirec2/controller"
+	"github.com/gin-gonic/gin"
+)
+
+func SetupRouter(router *gin.Engine) *gin.Engine {
+	router.Static("/static", "./static")
+
+	router.GET("/", controller.HomeView)
+
+	listeners := router.Group("/listeners")
+	listeners.GET("/", controller.ListenersView)
+	listeners.GET("/l", controller.ListenerDetailView)
+
+	grunts := router.Group("/grunts")
+	grunts.GET("/", controller.GruntsView)
+	grunts.GET("/g", controller.GruntDetailView)
+
+	return router
+}
+
+func SetupApiRouter(router *gin.Engine) *gin.Engine {
+	api := router.Group("/api")
+	api.GET("/health", controller.GetHealth)
+
+	return router
+}
+
+func SetupActionRouter(router *gin.Engine) *gin.Engine {
+	action := router.Group("/actions")
+	action.POST("/start-listener", controller.StartListener)
+	action.POST("/grunts/terminal/command", controller.SendGruntCommand)
+
+	partials := action.Group("/partials")
+	partials.GET("/dashboard/active-grunts", controller.DashboardActiveGruntsPartial)
+	partials.GET("/grunts/terminal/messages", controller.GruntTerminalMessagesPartial)
+
+	return router
+}

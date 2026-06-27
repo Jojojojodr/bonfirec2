@@ -1,0 +1,6 @@
+server:
+  port: 3000
+  debug: false
+database:
+  type: sqlite
+  dsn: ./data/bonfire.db
