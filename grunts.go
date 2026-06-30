@@ -138,3 +138,13 @@ func SetAllGruntsInactive() {
 		grunt.UpdatedAt = lastCheckIn
 	}
 }
+
+func GetLatestMessages() []*models.Message {
+	db := Data.GetDB()
+	var messages []*models.Message
+	if err := db.Order("created_at DESC").Limit(10).Find(&messages).Error; err != nil {
+		log.Printf("Failed to retrieve latest messages from database: %v", err)
+		return nil
+	}
+	return messages
+}
