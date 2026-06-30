@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/Jojojojodr/bonfirec2"
+	"github.com/Jojojojodr/bonfirec2/pkg/commands"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -86,7 +87,12 @@ func SendGruntCommand(c *gin.Context) {
 		return
 	}
 
-	if err := bonfirec2.SendCommandToGrunt(id, command); err != nil {
+	commandToSend := command
+	if slashCommand, ok := commands.ParseSlashCommand(command); ok {
+		commandToSend = slashCommand
+	}
+
+	if err := bonfirec2.SendCommandToGrunt(id, commandToSend); err != nil {
 		c.String(http.StatusConflict, "grunt is not connected")
 		return
 	}

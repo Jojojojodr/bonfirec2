@@ -2,6 +2,7 @@ package components
 
 import (
     "github.com/Jojojojodr/bonfirec2"
+    "github.com/Jojojojodr/bonfirec2/pkg/commands"
 )
 
 templ GruntsHeader() {
@@ -114,10 +115,16 @@ templ GruntView(grunt *bonfirec2.Grunt) {
                             <input
                                 name="command"
                                 type="text"
+                                list="grunt-command-suggestions"
                                 autocomplete="off"
                                 placeholder="run command"
                                 class="w-full rounded-lg border border-emerald-500/30 bg-black/70 px-3 py-2 font-mono text-sm text-emerald-100 outline-none ring-0 placeholder:text-emerald-700 focus:border-emerald-400"
                             />
+                            <datalist id="grunt-command-suggestions">
+                                for _, command := range commands.ListSlashCommands() {
+                                    <option value={ command }></option>
+                                }
+                            </datalist>
                             <button
                                 type="submit"
                                 class="rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-500/30">
