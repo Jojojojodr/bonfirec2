@@ -67,13 +67,27 @@ func GruntsTable() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for _, grunt := range bonfirec2.Grunts {
-			templ_7745c5c3_Err = gruntRow(grunt).Render(ctx, templ_7745c5c3_Buffer)
+		if grunts, err := bonfirec2.GetAllGrunts(); err == nil {
+			if len(grunts) == 0 {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<tr class=\"border-b border-slate-700/45 bg-slate-950/30\"><td colspan=\"4\" class=\"px-4 py-3 text-sm text-slate-400\">No grunts found.</td></tr>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				for _, grunt := range grunts {
+					templ_7745c5c3_Err = gruntRow(grunt).Render(ctx, templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<tr class=\"border-b border-slate-700/45 bg-slate-950/30\"><td colspan=\"4\" class=\"px-4 py-3 text-sm text-red-300\">Failed to load grunts.</td></tr>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</tbody></table></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</tbody></table></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -102,98 +116,98 @@ func GruntView(grunt *bonfirec2.Grunt) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"rounded-3xl border border-slate-700/60 bg-slate-900/85 p-5 shadow-xl shadow-slate-950/40 backdrop-blur\"><h2 class=\"text-lg font-semibold text-white\">Grunt Detail</h2><p class=\"mt-1 text-sm text-slate-400\">Details of the selected grunt.</p><div class=\"mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3\"><div class=\"flex gap-4 sm:col-span-2 xl:col-span-3\"><div class=\"flex flex-row gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur sm:flex-row\" style=\"width: 50%;\"><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Grunt ID</p><p class=\"mt-2 break-all text-sm font-semibold text-white\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"rounded-3xl border border-slate-700/60 bg-slate-900/85 p-5 shadow-xl shadow-slate-950/40 backdrop-blur\"><h2 class=\"text-lg font-semibold text-white\">Grunt Detail</h2><p class=\"mt-1 text-sm text-slate-400\">Details of the selected grunt.</p><div class=\"mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3\"><div class=\"flex gap-4 sm:col-span-2 xl:col-span-3\"><div class=\"flex flex-row gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur sm:flex-row\" style=\"width: 50%;\"><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Grunt ID</p><p class=\"mt-2 break-all text-sm font-semibold text-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 60, Col: 92}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 72, Col: 92}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</p></div><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Listener ID</p><p class=\"mt-2 break-all text-sm font-semibold text-white\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p></div><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Listener ID</p><p class=\"mt-2 break-all text-sm font-semibold text-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ListenerID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 64, Col: 100}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 76, Col: 100}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</p></div></div><div class=\"flex flex-col gap-4 sm:col-span-2 xl:col-span-3\"><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Status</p><p class=\"mt-2 text-sm font-semibold text-emerald-300\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</p></div></div><div class=\"flex flex-col gap-4 sm:col-span-2 xl:col-span-3\"><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Status</p><p class=\"mt-2 text-sm font-semibold text-emerald-300\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.Status)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 70, Col: 92}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 82, Col: 92}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p></div><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Last Check-in</p><p class=\"mt-2 text-sm font-semibold text-white\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</p></div><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Last Check-in</p><p class=\"mt-2 text-sm font-semibold text-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.LastCheckIn)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 74, Col: 91}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 86, Col: 91}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</p></div></div><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Created At</p><p class=\"mt-2 text-sm font-semibold text-white\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</p></div></div><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Created At</p><p class=\"mt-2 text-sm font-semibold text-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.CreatedAt)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 80, Col: 85}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 92, Col: 85}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</p></div><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Updated At</p><p class=\"mt-2 text-sm font-semibold text-white\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</p></div><div class=\"rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur\"><p class=\"text-xs uppercase tracking-[0.16em] text-slate-400\">Updated At</p><p class=\"mt-2 text-sm font-semibold text-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.UpdatedAt)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 84, Col: 85}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 96, Col: 85}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</p></div></div><div class=\"flex flex-col gap-2 sm:col-span-2 xl:col-span-3\"><span class=\"text-sm font-semibold text-slate-300\">Terminal:</span><div class=\"overflow-hidden rounded-2xl border border-emerald-500/35 bg-black/85 shadow-inner shadow-emerald-950/40\"><div class=\"flex items-center justify-between border-b border-emerald-500/25 bg-emerald-950/30 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-300\"><span>BonFire C2 shell</span> <span class=\"inline-flex items-center gap-2 text-emerald-200\"><span class=\"h-2 w-2 rounded-full bg-emerald-300\"></span> live</span></div><div id=\"grunt-terminal-output\" class=\"max-h-[22rem] min-h-[16rem] overflow-y-auto p-4 font-mono text-sm leading-6\" hx-get=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</p></div></div><div class=\"flex flex-col gap-2 sm:col-span-2 xl:col-span-3\"><span class=\"text-sm font-semibold text-slate-300\">Terminal:</span><div class=\"overflow-hidden rounded-2xl border border-emerald-500/35 bg-black/85 shadow-inner shadow-emerald-950/40\"><div class=\"flex items-center justify-between border-b border-emerald-500/25 bg-emerald-950/30 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-300\"><span>BonFire C2 shell</span> <span class=\"inline-flex items-center gap-2 text-emerald-200\"><span class=\"h-2 w-2 rounded-full bg-emerald-300\"></span> live</span></div><div id=\"grunt-terminal-output\" class=\"max-h-[22rem] min-h-[16rem] overflow-y-auto p-4 font-mono text-sm leading-6\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue("/actions/partials/grunts/terminal/messages?id=" + grunt.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 101, Col: 92}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 113, Col: 92}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" hx-trigger=\"load, every 2s\" hx-swap=\"innerHTML\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" hx-trigger=\"load, every 2s\" hx-swap=\"innerHTML\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -201,43 +215,43 @@ func GruntView(grunt *bonfirec2.Grunt) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><form class=\"border-t border-emerald-500/25 bg-slate-950/70 p-3\" hx-post=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><form class=\"border-t border-emerald-500/25 bg-slate-950/70 p-3\" hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue("/actions/grunts/terminal/command?id=" + grunt.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 109, Col: 83}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 121, Col: 83}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" hx-target=\"#grunt-terminal-output\" hx-swap=\"innerHTML\" hx-on:htmx:after-request=\"this.reset()\"><div class=\"flex items-center gap-3\"><span class=\"font-mono text-emerald-300\">operator@bonfire:~$</span> <input name=\"command\" type=\"text\" list=\"grunt-command-suggestions\" autocomplete=\"off\" placeholder=\"run command\" class=\"w-full rounded-lg border border-emerald-500/30 bg-black/70 px-3 py-2 font-mono text-sm text-emerald-100 outline-none ring-0 placeholder:text-emerald-700 focus:border-emerald-400\"> <datalist id=\"grunt-command-suggestions\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" hx-target=\"#grunt-terminal-output\" hx-swap=\"innerHTML\" hx-on:htmx:after-request=\"this.reset()\"><div class=\"flex items-center gap-3\"><span class=\"font-mono text-emerald-300\">operator@bonfire:~$</span> <input name=\"command\" type=\"text\" list=\"grunt-command-suggestions\" autocomplete=\"off\" placeholder=\"run command\" class=\"w-full rounded-lg border border-emerald-500/30 bg-black/70 px-3 py-2 font-mono text-sm text-emerald-100 outline-none ring-0 placeholder:text-emerald-700 focus:border-emerald-400\"> <datalist id=\"grunt-command-suggestions\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, command := range commands.ListSlashCommands() {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<option value=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<option value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(command)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 125, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 137, Col: 59}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\"></option>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\"></option>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</datalist> <button type=\"submit\" class=\"rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-500/30\">send</button></div></form></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</datalist> <button type=\"submit\" class=\"rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-500/30\">send</button></div></form></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -268,41 +282,23 @@ func GruntTerminalMessages(grunt *bonfirec2.Grunt) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		if messages, err := grunt.GetMessages(); err == nil {
 			if len(messages) == 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<div class=\"text-emerald-700\">No output yet.</div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<div class=\"text-emerald-700\">No output yet.</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 			for _, message := range messages {
 				if message.IsServerMessage {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<div class=\"whitespace-pre-wrap break-words text-cyan-300\">operator> ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<div class=\"whitespace-pre-wrap break-words text-cyan-300\">operator> ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var14 string
 					templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(message.Content)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 148, Col: 101}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 160, Col: 101}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div>")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<div class=\"whitespace-pre-wrap break-words text-emerald-200\">grunt> ")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var15 string
-					templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(message.Content)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 150, Col: 101}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -310,10 +306,28 @@ func GruntTerminalMessages(grunt *bonfirec2.Grunt) templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
+				} else {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"whitespace-pre-wrap break-words text-emerald-200\">grunt> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var15 string
+					templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(message.Content)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 162, Col: 101}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 				}
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"text-red-300\">Failed to load terminal output.</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<div class=\"text-red-300\">Failed to load terminal output.</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -347,7 +361,7 @@ func gruntRow(grunt *bonfirec2.Grunt) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<tr class=\"border-b border-slate-700/45 bg-slate-950/30 hover:bg-slate-900/45\" hover:class=\"bg-slate-900/45 cursor-pointer\" role=\"link\" tabindex=\"0\" onclick=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<tr class=\"border-b border-slate-700/45 bg-slate-950/30 hover:bg-slate-900/45\" hover:class=\"bg-slate-900/45 cursor-pointer\" role=\"link\" tabindex=\"0\" onclick=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -356,42 +370,16 @@ func gruntRow(grunt *bonfirec2.Grunt) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\"><td class=\"px-4 py-2 text-sm text-slate-200\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\"><td class=\"px-4 py-2 text-sm text-slate-200\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 164, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 176, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</td><td class=\"px-4 py-2 text-sm text-slate-200\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var19 string
-		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ListenerID)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 165, Col: 70}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</td><td class=\"px-4 py-2 text-sm text-slate-200\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var20 string
-		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.Status)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 166, Col: 66}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -399,16 +387,42 @@ func gruntRow(grunt *bonfirec2.Grunt) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
+		var templ_7745c5c3_Var19 string
+		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ListenerID)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 177, Col: 70}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</td><td class=\"px-4 py-2 text-sm text-slate-200\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var20 string
+		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.Status)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 178, Col: 66}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</td><td class=\"px-4 py-2 text-sm text-slate-200\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		var templ_7745c5c3_Var21 string
 		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.LastCheckIn)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 167, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 179, Col: 71}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</td></tr>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</td></tr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

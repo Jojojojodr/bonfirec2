@@ -39,8 +39,20 @@ templ GruntsTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    for _, grunt := range bonfirec2.Grunts {
-                        @gruntRow(grunt)
+                    if grunts, err := bonfirec2.GetAllGrunts(); err == nil {
+                        if len(grunts) == 0 {
+                            <tr class="border-b border-slate-700/45 bg-slate-950/30">
+                                <td colspan="4" class="px-4 py-3 text-sm text-slate-400">No grunts found.</td>
+                            </tr>
+                        } else {
+                            for _, grunt := range grunts {
+                                @gruntRow(grunt)
+                            }
+                        }
+                    } else {
+                        <tr class="border-b border-slate-700/45 bg-slate-950/30">
+                            <td colspan="4" class="px-4 py-3 text-sm text-red-300">Failed to load grunts.</td>
+                        </tr>
                     }
                 </tbody>
             </table>

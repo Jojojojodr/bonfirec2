@@ -87,7 +87,7 @@ func SaveGruntMessage(senderID, receiverID, content string, isServerMessage bool
 		SenderID:        senderID,
 		ReceiverID:      receiverID,
 		IsServerMessage: isServerMessage,
-		Content:    content,
+		Content:         content,
 	}
 
 	if err := db.Create(msg).Error; err != nil {
@@ -147,4 +147,24 @@ func GetLatestMessages() []*models.Message {
 		return nil
 	}
 	return messages
+}
+
+func GetAllGrunts() ([]*Grunt, error) {
+	db := Data.GetDB()
+	var grunts []*Grunt
+	if err := db.Order("created_at DESC").Find(&grunts).Error; err != nil {
+		log.Printf("Failed to retrieve grunts from database: %v", err)
+		return nil, err
+	}
+	return grunts, nil
+}
+
+func GetGruntsByListenerID(listenerID string) ([]*Grunt, error) {
+	db := Data.GetDB()
+	var grunts []*Grunt
+	if err := db.Where("listener_id = ?", listenerID).Order("created_at DESC").Find(&grunts).Error; err != nil {
+		log.Printf("Failed to retrieve grunts for listener %s: %v", listenerID, err)
+		return nil, err
+	}
+	return grunts, nil
 }

@@ -68,7 +68,11 @@ templ ListenerView(listener *bonfirec2.Listener) {
                 </div>
                 <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
                     <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Grunts Connected</p>
-                    <p class="mt-2 text-sm font-semibold text-white">{ listener.GruntCount }</p>
+                    if listenerGrunts, err := bonfirec2.GetGruntsByListenerID(listener.ID); err != nil {
+                        <p class="mt-2 text-sm font-semibold text-red-300">Error</p>
+                    } else {
+                        <p class="mt-2 text-sm font-semibold text-white">{ len(listenerGrunts) }</p>
+                    }
                 </div>
             </div>
             <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -133,15 +137,18 @@ templ ListenerView(listener *bonfirec2.Listener) {
                         </tr>
                     </thead>
                     <tbody>
-                        if listener.GruntCount == 0 {
+                        if listenerGrunts, err := bonfirec2.GetGruntsByListenerID(listener.ID); err != nil {
                             <tr class="border-b border-slate-700/45 bg-slate-950/30">
-                                <td colspan="4" class="px-4 py-3 text-sm text-slate-400">No grunts connected to this listener.</td>
+                                <td colspan="4" class="px-4 py-3 text-sm text-red-300">Failed to load grunts for this listener.</td>
                             </tr>
                         } else {
-                            for _, grunt := range bonfirec2.Grunts {
-                                if grunt.ListenerID == listener.ID {
-                                    @listenerGruntRow(grunt)
-                                }
+                            if len(listenerGrunts) == 0 {
+                                <tr class="border-b border-slate-700/45 bg-slate-950/30">
+                                    <td colspan="4" class="px-4 py-3 text-sm text-slate-400">No grunts connected to this listener.</td>
+                                </tr>
+                            }
+                            for _, grunt := range listenerGrunts {
+                                @listenerGruntRow(grunt)
                             }
                         }
                     </tbody>
