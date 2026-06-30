@@ -40,7 +40,9 @@ func SetupApiRouter(router *gin.Engine) *gin.Engine {
 
 func SetupActionRouter(router *gin.Engine) *gin.Engine {
 	action := router.Group("/actions")
+	action.POST("/new-listener", controller.NewListener)
 	action.POST("/start-listener", controller.StartListener)
+	action.POST("/stop-listener", controller.StopListener)
 	action.POST("/grunts/terminal/command", controller.SendGruntCommand)
 
 	partials := action.Group("/partials")

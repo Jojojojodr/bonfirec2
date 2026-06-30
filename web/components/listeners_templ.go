@@ -33,7 +33,7 @@ func ListenersHeader() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between\"><div class=\"space-y-2\"><div class=\"inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-200 shadow-lg shadow-emerald-950/20 backdrop-blur\"><span class=\"h-2 w-2 rounded-full bg-emerald-300\"></span> Active listeners</div><div><h1 class=\"mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl\">List of all active listeners</h1><p class=\"mt-3 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg\">Monitor and manage all active listeners in the system.</p></div></div><div class=\"flex flex-wrap gap-3\"><form action=\"/actions/start-listener\" method=\"POST\"><button type=\"submit\" class=\"inline-flex items-center justify-center rounded-full bg-emerald-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300\">Start listener</button></form></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between\"><div class=\"space-y-2\"><div class=\"inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-200 shadow-lg shadow-emerald-950/20 backdrop-blur\"><span class=\"h-2 w-2 rounded-full bg-emerald-300\"></span> Active listeners</div><div><h1 class=\"mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl\">List of all active listeners</h1><p class=\"mt-3 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg\">Monitor and manage all active listeners in the system.</p></div></div><div class=\"flex flex-wrap gap-3\"><form action=\"/actions/new-listener\" method=\"POST\"><button type=\"submit\" class=\"inline-flex items-center justify-center rounded-full bg-emerald-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300\">Start listener</button></form></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -62,7 +62,7 @@ func ListenersTable() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"rounded-3xl border border-slate-700/60 bg-slate-900/85 p-5 shadow-xl shadow-slate-950/40 backdrop-blur\"><h2 class=\"text-lg font-semibold text-white\">Active listeners</h2><p class=\"mt-1 text-sm text-slate-400\">List of all active listeners in the system.</p><div class=\"mt-4 overflow-x-auto\"><table class=\"w-full table-auto border-collapse overflow-hidden rounded-2xl border border-slate-600/55 bg-slate-950/45 backdrop-blur-md\"><thead><tr class=\"border-b border-slate-600/60 bg-slate-900/55 text-left text-sm font-semibold text-slate-300 backdrop-blur-sm\"><th class=\"px-4 py-2\">Listener ID</th><th class=\"px-4 py-2\">Address</th><th class=\"px-4 py-2\">Port</th><th class=\"px-4 py-2\">Protocol</th><th class=\"px-4 py-2\">Status</th><th class=\"px-4 py-2\">Last Check-in</th></tr></thead> <tbody>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"rounded-3xl border border-slate-700/60 bg-slate-900/85 p-5 shadow-xl shadow-slate-950/40 backdrop-blur\"><h2 class=\"text-lg font-semibold text-white\">Active listeners</h2><p class=\"mt-1 text-sm text-slate-400\">List of all active listeners in the system.</p><div class=\"mt-4 overflow-x-auto\"><table class=\"w-full table-auto border-collapse overflow-hidden rounded-2xl border border-slate-600/55 bg-slate-950/45 backdrop-blur-md\"><thead><tr class=\"border-b border-slate-600/60 bg-slate-900/55 text-left text-sm font-semibold text-slate-300 backdrop-blur-sm\"><th class=\"px-4 py-2\">Listener ID</th><th class=\"px-4 py-2\">Address</th><th class=\"px-4 py-2\">Port</th><th class=\"px-4 py-2\">Protocol</th><th class=\"px-4 py-2\">Status</th><th class=\"px-4 py-2\">Last Check-in</th><th class=\"px-4 py-2\">Actions</th></tr></thead> <tbody>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -108,7 +108,7 @@ func ListenerView(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(listener.GruntCount)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 70, Col: 90}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 71, Col: 90}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -121,7 +121,7 @@ func ListenerView(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(listener.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 79, Col: 104}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 80, Col: 104}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -134,7 +134,7 @@ func ListenerView(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(listener.Address)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 83, Col: 99}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 84, Col: 99}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -147,7 +147,7 @@ func ListenerView(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(listener.Port)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 89, Col: 96}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 90, Col: 96}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -160,7 +160,7 @@ func ListenerView(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(listener.Protocol)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 93, Col: 100}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 94, Col: 100}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -173,7 +173,7 @@ func ListenerView(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(listener.Status)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 100, Col: 100}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 101, Col: 100}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -186,7 +186,7 @@ func ListenerView(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(listener.LastCheckIn)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 104, Col: 99}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 105, Col: 99}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -199,7 +199,7 @@ func ListenerView(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(listener.CreatedAt)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 110, Col: 97}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 111, Col: 97}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -212,7 +212,7 @@ func ListenerView(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(listener.UpdatedAt)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 114, Col: 97}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 115, Col: 97}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -286,7 +286,7 @@ func listenerGruntRow(grunt *bonfirec2.Grunt) templ.Component {
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 160, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 161, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
@@ -299,7 +299,7 @@ func listenerGruntRow(grunt *bonfirec2.Grunt) templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.Address)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 161, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 162, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -312,7 +312,7 @@ func listenerGruntRow(grunt *bonfirec2.Grunt) templ.Component {
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.Status)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 162, Col: 66}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 163, Col: 66}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
@@ -325,7 +325,7 @@ func listenerGruntRow(grunt *bonfirec2.Grunt) templ.Component {
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.LastCheckIn)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 163, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 164, Col: 71}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
@@ -380,7 +380,7 @@ func listenerRow(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var21 string
 		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(listener.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 174, Col: 65}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 175, Col: 65}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 		if templ_7745c5c3_Err != nil {
@@ -393,7 +393,7 @@ func listenerRow(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var22 string
 		templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(listener.Address)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 175, Col: 70}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 176, Col: 70}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 		if templ_7745c5c3_Err != nil {
@@ -406,7 +406,7 @@ func listenerRow(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var23 string
 		templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(listener.Port)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 176, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 177, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 		if templ_7745c5c3_Err != nil {
@@ -419,7 +419,7 @@ func listenerRow(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var24 string
 		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(listener.Protocol)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 177, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 178, Col: 71}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 		if templ_7745c5c3_Err != nil {
@@ -447,13 +447,54 @@ func listenerRow(listener *bonfirec2.Listener) templ.Component {
 		var templ_7745c5c3_Var25 string
 		templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(listener.LastCheckIn)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 191, Col: 74}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 192, Col: 74}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</td></tr>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</td><td class=\"px-4 py-2 text-sm text-slate-400\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if listener.Status == "Active" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<form action=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var26 templ.SafeURL
+			templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinURLErrs("/actions/stop-listener?id=" + listener.ID)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 195, Col: 73}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\" method=\"POST\"><button class=\"inline-flex items-center gap-2 rounded-full bg-red-400/20 px-3 py-1 text-xs font-medium text-red-300 hover:bg-red-400/30\" type=\"submit\">Stop Listener</button></form>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<form action=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var27 templ.SafeURL
+			templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinURLErrs("/actions/start-listener?id=" + listener.ID)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/listeners.templ`, Line: 204, Col: 74}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "\" method=\"POST\"><button class=\"inline-flex items-center gap-2 rounded-full bg-green-400/20 px-3 py-1 text-xs font-medium text-green-300 hover:bg-green-400/30\" type=\"submit\">Start Listener</button></form>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</td></tr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

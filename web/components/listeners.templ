@@ -22,7 +22,7 @@ templ ListenersHeader() {
         </div>
 
         <div class="flex flex-wrap gap-3">
-            <form action="/actions/start-listener" method="POST">
+            <form action="/actions/new-listener" method="POST">
                 <button type="submit" class="inline-flex items-center justify-center rounded-full bg-emerald-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300">
                     Start listener
                 </button>
@@ -45,6 +45,7 @@ templ ListenersTable() {
                         <th class="px-4 py-2">Protocol</th>
                         <th class="px-4 py-2">Status</th>
                         <th class="px-4 py-2">Last Check-in</th>
+                        <th class="px-4 py-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -189,6 +190,27 @@ templ listenerRow(listener *bonfirec2.Listener) {
             }
         </td>
         <td class="px-4 py-2 text-sm text-slate-400">{listener.LastCheckIn}</td>
+        <td class="px-4 py-2 text-sm text-slate-400">
+            if listener.Status == "Active" {
+                <form action={ "/actions/stop-listener?id=" + listener.ID } method="POST">
+                    <button
+                        class="inline-flex items-center gap-2 rounded-full bg-red-400/20 px-3 py-1 text-xs font-medium text-red-300 hover:bg-red-400/30"
+                        type="submit"
+                    >
+                        Stop Listener
+                    </button>
+                </form>
+            } else {
+                <form action={ "/actions/start-listener?id=" + listener.ID } method="POST">
+                    <button
+                        class="inline-flex items-center gap-2 rounded-full bg-green-400/20 px-3 py-1 text-xs font-medium text-green-300 hover:bg-green-400/30"
+                        type="submit"
+                    >
+                        Start Listener
+                    </button>
+                </form>
+            }
+        </td>
     </tr>
 }
 

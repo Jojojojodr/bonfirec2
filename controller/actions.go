@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func StartListener(c *gin.Context) {
+func NewListener(c *gin.Context) {
 	id := uuid.New().String()
 	port := strconv.FormatInt(7777+int64(len(bonfirec2.Listeners)), 10)
 
@@ -23,6 +23,46 @@ func StartListener(c *gin.Context) {
 		}
 	}()
 	bonfirec2.Listeners[id] = listener
+
+	redirectTarget := c.GetHeader("Referer")
+	if redirectTarget == "" {
+		redirectTarget = "/"
+	}
+
+	c.Redirect(http.StatusSeeOther, redirectTarget)
+}
+
+func StartListener(c *gin.Context) {
+	id := c.Query("id")
+	listener := bonfirec2.Listeners[id]
+	if listener == nil {
+		c.String(http.StatusNotFound, "listener not found")
+		return
+	}
+
+	go func() {
+		if err := listener.Start(); err != nil {
+			log.Printf("failed to start listener %s: %v", id, err)
+		}
+	}()
+
+	redirectTarget := c.GetHeader("Referer")
+	if redirectTarget == "" {
+		redirectTarget = "/"
+	}
+
+	c.Redirect(http.StatusSeeOther, redirectTarget)
+}
+
+func StopListener(c *gin.Context) {
+	id := c.Query("id")
+	listener := bonfirec2.Listeners[id]
+	if listener == nil {
+		c.String(http.StatusNotFound, "listener not found")
+		return
+	}
+
+	listener.Stop()
 
 	redirectTarget := c.GetHeader("Referer")
 	if redirectTarget == "" {
