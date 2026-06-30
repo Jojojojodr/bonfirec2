@@ -156,7 +156,7 @@ templ listenerGruntRow(grunt *bonfirec2.Grunt) {
         class="border-b border-slate-700/45 bg-slate-950/30 hover:bg-slate-900/45 cursor-pointer"
         role="link"
         tabindex="0"
-        onclick={ directToListenerGruntDetail(grunt.ID) }
+        onclick={ directToGruntDetail(grunt.ID) }
     >
         <td class="px-4 py-2 text-sm text-slate-200">{grunt.ID}</td>
         <td class="px-4 py-2 text-sm text-slate-200">{grunt.Address}</td>
@@ -216,8 +216,4 @@ templ listenerRow(listener *bonfirec2.Listener) {
 
 script directToListenerDetail(id string) {
     window.location.href = "/listeners/l?id=" + id;
-}
-
-script directToListenerGruntDetail(gruntID string) {
-    window.location.href = "/grunts/g?id=" + gruntID;
 }

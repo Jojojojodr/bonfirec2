@@ -266,7 +266,7 @@ func listenerGruntRow(grunt *bonfirec2.Grunt) templ.Component {
 			templ_7745c5c3_Var13 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, directToListenerGruntDetail(grunt.ID))
+		templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, directToGruntDetail(grunt.ID))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -274,7 +274,7 @@ func listenerGruntRow(grunt *bonfirec2.Grunt) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var14 templ.ComponentScript = directToListenerGruntDetail(grunt.ID)
+		var templ_7745c5c3_Var14 templ.ComponentScript = directToGruntDetail(grunt.ID)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14.Call)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -509,16 +509,6 @@ func directToListenerDetail(id string) templ.ComponentScript {
 }`,
 		Call:       templ.SafeScript(`__templ_directToListenerDetail_3cc8`, id),
 		CallInline: templ.SafeScriptInline(`__templ_directToListenerDetail_3cc8`, id),
-	}
-}
-
-func directToListenerGruntDetail(gruntID string) templ.ComponentScript {
-	return templ.ComponentScript{
-		Name: `__templ_directToListenerGruntDetail_eb4e`,
-		Function: `function __templ_directToListenerGruntDetail_eb4e(gruntID){window.location.href = "/grunts/g?id=" + gruntID;
-}`,
-		Call:       templ.SafeScript(`__templ_directToListenerGruntDetail_eb4e`, gruntID),
-		CallInline: templ.SafeScriptInline(`__templ_directToListenerGruntDetail_eb4e`, gruntID),
 	}
 }
 
