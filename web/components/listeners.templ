@@ -167,7 +167,19 @@ templ listenerGruntRow(grunt *bonfirec2.Grunt) {
     >
         <td class="px-4 py-2 text-sm text-slate-200">{grunt.ID}</td>
         <td class="px-4 py-2 text-sm text-slate-200">{grunt.Address}</td>
-        <td class="px-4 py-2 text-sm text-slate-200">{grunt.Status}</td>
+        <td class="px-4 py-2 text-sm">
+            if grunt.Status == "Active" {
+                <span class="inline-flex items-center gap-2 rounded-full bg-green-400/20 px-3 py-1 text-xs font-medium text-green-300">
+                    <span class="h-2 w-2 rounded-full bg-green-300"></span>
+                    Active
+                </span>
+            } else {
+                <span class="inline-flex items-center gap-2 rounded-full bg-red-400/20 px-3 py-1 text-xs font-medium text-red-300">
+                    <span class="h-2 w-2 rounded-full bg-red-300"></span>
+                    Inactive
+                </span>
+            }
+        </td>
         <td class="px-4 py-2 text-sm text-slate-400">{grunt.LastCheckIn}</td>
     </tr>
 }
