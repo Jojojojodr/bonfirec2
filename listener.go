@@ -1,6 +1,7 @@
 package bonfirec2
 
 import (
+	"errors"
 	"io"
 	"log"
 	"net"
@@ -29,36 +30,88 @@ type Listener struct {
 	ln          net.Listener
 	quitch      chan struct{}
 	msgch       chan []byte
+	mu          sync.Mutex
+	running     bool
 }
 
 func (l *Listener) Start() error {
-	if l.quitch == nil {
-		l.quitch = make(chan struct{})
+	l.mu.Lock()
+	if l.running {
+		l.mu.Unlock()
+		return errors.New("listener already running")
 	}
-	if l.msgch == nil {
-		l.msgch = make(chan []byte, 10)
-	}
+
+	quitCh := make(chan struct{})
+	msgCh := make(chan []byte, 10)
+	l.quitch = quitCh
+	l.msgch = msgCh
+	l.running = true
+	l.mu.Unlock()
 
 	// Create a new listener based on the protocol
 	ln, err := net.Listen(l.Protocol, l.Address+":"+l.Port)
 	if err != nil {
+		_ = l.UpdateStatus("Inactive", time.Now().Format("2006-01-02 15:04:05"))
+		l.mu.Lock()
+		l.running = false
+		if l.quitch == quitCh {
+			l.quitch = nil
+		}
+		if l.msgch == msgCh {
+			l.msgch = nil
+		}
+		l.mu.Unlock()
 		return err
 	}
 
-	defer ln.Close()
+	l.mu.Lock()
 	l.ln = ln
+	l.mu.Unlock()
 
-	go l.acceptLoop() // Start accepting connections in a separate goroutine
+	_ = l.UpdateStatus("Active", time.Now().Format("2006-01-02 15:04:05"))
 
-	<-l.quitch     // Wait for quit signal
-	close(l.msgch) // Close the message channel when done
+	go l.acceptLoop(ln, quitCh) // Start accepting connections in a separate goroutine
+
+	<-quitCh // Wait for quit signal
+	_ = ln.Close()
+	close(msgCh)
+
+	l.mu.Lock()
+	if l.ln == ln {
+		l.ln = nil
+	}
+	if l.quitch == quitCh {
+		l.quitch = nil
+	}
+	if l.msgch == msgCh {
+		l.msgch = nil
+	}
+	l.running = false
+	l.mu.Unlock()
 
 	return nil
 }
 
 func (l *Listener) Stop() {
-	close(l.quitch) // Signal to stop the listener
-	delete(Listeners, l.ID)
+	l.mu.Lock()
+	if !l.running {
+		l.mu.Unlock()
+		return
+	}
+
+	quitCh := l.quitch
+	ln := l.ln
+	l.running = false
+	l.mu.Unlock()
+
+	if quitCh != nil {
+		close(quitCh) // Signal to stop the listener
+	}
+	if ln != nil {
+		_ = ln.Close() // Close the underlying network listener
+	}
+
+	l.UpdateStatus("Inactive", time.Now().Format("2006-01-02 15:04:05"))
 }
 
 func (l *Listener) ReinitializeRuntimeChannels() {
@@ -84,15 +137,22 @@ func (l *Listener) GetMessages() <-chan []byte {
 	return l.msgch
 }
 
-func (l *Listener) acceptLoop() {
+func (l *Listener) acceptLoop(ln net.Listener, quitCh <-chan struct{}) {
 	for {
-		conn, err := l.ln.Accept()
+		conn, err := ln.Accept()
 		if err != nil {
+			select {
+			case <-quitCh:
+				return
+			default:
+			}
+			if errors.Is(err, net.ErrClosed) {
+				return
+			}
 			log.Printf("Error accepting connection: %v", err)
 			continue
 		}
-		l.Status = "Active"
-		l.LastCheckIn = time.Now().Format("2006-01-02 15:04:05")
+		l.UpdateStatus("Active", time.Now().Format("2006-01-02 15:04:05"))
 
 		// Handle the connection in a new goroutine
 		go l.handleConnection(conn)
@@ -134,7 +194,7 @@ func (l *Listener) handleConnection(conn net.Conn) {
 				}
 			}
 			if len(Grunts) == 0 {
-				l.UpdateStatus("Inactive", time.Now().Format("2006-01-02 15:04:05"))
+				l.UpdateStatus("Active", time.Now().Format("2006-01-02 15:04:05"))
 			}
 			gruntConnectionsMu.Lock()
 			delete(gruntConnections, id)
@@ -163,23 +223,23 @@ func NewListener(id, address, port, protocol string) *Listener {
 		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
 		UpdatedAt: time.Now().Format("2006-01-02 15:04:05"),
 	}
-	
+
 	listener := &Listener{
 		DefaultModel: defaultModel,
 		Address:      address,
 		Port:         port,
 		Protocol:     protocol,
-		Status:       "Inactive",
+		Status:       "Active",
 		LastCheckIn:  "",
 		GruntCount:   0,
 		quitch:       make(chan struct{}),
 		msgch:        make(chan []byte, 10),
 	}
-	
+
 	if err := db.Create(listener).Error; err != nil {
 		log.Printf("Failed to save listener to database: %v", err)
 	}
-	
+
 	return listener
 }
 
