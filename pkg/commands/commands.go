@@ -1,33 +1,40 @@
 package commands
 
 import (
+	"runtime"
 	"sort"
 	"strings"
 )
 
 var available = map[string]string{
-	"whoami": "whoami",
-	"ping":   "ping",
+	"whoami":   "whoami",
+	"ping":     "ping",
+	"hostname": "hostname",
+	"ip":       "ip",
+	"list":     "list",
+	"cmd":      "cmd",
 }
 
-// ParseSlashCommand converts "/whoami" to "whoami" and validates it.
-func ParseSlashCommand(input string) (string, bool) {
+// ParseSlashCommand splits "/whoami" into "whoami" and an optional payload.
+func ParseSlashCommand(input string) (string, string, bool) {
 	trimmed := strings.TrimSpace(input)
 	if !strings.HasPrefix(trimmed, "/") {
-		return "", false
+		return "", "", false
 	}
 
-	name := strings.TrimPrefix(trimmed, "/")
-	name = strings.TrimSpace(name)
-	if name == "" {
-		return "", false
+	trimmed = strings.TrimSpace(strings.TrimPrefix(trimmed, "/"))
+	if trimmed == "" {
+		return "", "", false
 	}
 
+	parts := strings.Fields(trimmed)
+	name := parts[0]
 	if _, ok := available[name]; !ok {
-		return "", false
+		return "", "", false
 	}
 
-	return name, true
+	payload := strings.TrimSpace(strings.TrimPrefix(trimmed, name))
+	return name, payload, true
 }
 
 func IsKnown(name string) bool {
@@ -42,4 +49,31 @@ func ListSlashCommands() []string {
 	}
 	sort.Strings(list)
 	return list
+}
+
+func GetCommand(command string) string {
+	var resolved string
+	switch command {
+	case "ping":
+		if runtime.GOOS == "windows" {
+			resolved = "ping -n 1 127.0.0.1"
+		} else {
+			resolved = "ping -c 1 127.0.0.1"
+		}
+	case "ip":
+		if runtime.GOOS == "windows" {
+			resolved = "ipconfig"
+		} else {
+			resolved = "ip addr"
+		}
+	case "list":
+		if runtime.GOOS == "windows" {
+			resolved = "dir"
+		} else {
+			resolved = "ls"
+		}
+	default:
+		resolved = command
+	}
+	return resolved
 }

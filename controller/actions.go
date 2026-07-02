@@ -88,8 +88,12 @@ func SendGruntCommand(c *gin.Context) {
 	}
 
 	commandToSend := command
-	if slashCommand, ok := commands.ParseSlashCommand(command); ok {
-		commandToSend = slashCommand
+	if slashCommand, _, ok := commands.ParseSlashCommand(command); ok {
+		if slashCommand == "cmd" {
+			commandToSend = command
+		} else {
+			commandToSend = slashCommand
+		}
 	}
 
 	if err := bonfirec2.SendCommandToGrunt(id, commandToSend); err != nil {
