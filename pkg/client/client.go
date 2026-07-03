@@ -44,7 +44,6 @@ func (c *Client) Connect() {
 	}
 
 	go c.handleMessageInput()
-	defer c.Close()
 
 	for {
 		var conn net.Conn
@@ -68,6 +67,10 @@ func (c *Client) Connect() {
 				log.Printf("Connection ended: %v. Reconnecting...", err)
 			}
 		}
+		if err := conn.Close(); err != nil {
+			log.Printf("Error closing connection: %v", err)
+		}
+		c.Conn = nil
 	}
 }
 
