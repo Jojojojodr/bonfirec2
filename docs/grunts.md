@@ -41,9 +41,9 @@ Save a message for a grunt:
 curl -X POST http://localhost:8080/api/messages/grunt \
 	-H 'Content-Type: application/json' \
 	-d '{
-                "grunt_id": "GRUNT_ID",
-                "content": "whoami"
-            }'
+            "grunt_id": "GRUNT_ID",
+            "content": "whoami"
+        }'
 ```
 
 Send a command through the web action route:

@@ -50,10 +50,10 @@ Create a listener:
 curl -X POST http://localhost:8080/api/listeners \
 	-H 'Content-Type: application/json' \
 	-d '{
-                "address": "127.0.0.1",
-                "port": "7777",
-                "protocol": "tcp",
-            }'
+            "address": "127.0.0.1",
+            "port": "7777",
+            "protocol": "tcp",
+        }'
 ```
 
 Create a task:
@@ -62,14 +62,14 @@ Create a task:
 curl -X POST http://localhost:8080/api/tasks \
 	-H 'Content-Type: application/json' \
 	-d '{
-                "grunt_id": "GRUNT_ID",
-                "command": "whoami",
-                "scheduled_for": "2026-07-04T12:00:00Z",
-                "repeat": false,
-                "repeat_every_seconds": 0,
-                "repeat_count": 1,
-                "timeout": 0,
-             }'
+            "grunt_id": "GRUNT_ID",
+            "command": "whoami",
+            "scheduled_for": "2026-07-04T12:00:00Z",
+            "repeat": false,
+            "repeat_every_seconds": 0,
+            "repeat_count": 1,
+            "timeout": 0,
+        }'
 ```
 
 ### Notes

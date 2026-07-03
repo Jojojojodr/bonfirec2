@@ -39,10 +39,10 @@ Create a listener:
 curl -X POST http://localhost:8080/api/listeners \
 	-H 'Content-Type: application/json' \
 	-d '{
-                "address":"127.0.0.1",
-                "port":"7777",
-                "protocol":"tcp"
-            }'
+            "address":"127.0.0.1",
+            "port":"7777",
+            "protocol":"tcp"
+        }'
 ```
 
 Start or stop an existing listener from the action routes:
