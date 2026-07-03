@@ -39,23 +39,19 @@ git clone https://github.com/Jojojojodr/bonfirec2.git
 cd bonfirec2
 ```
 
-### 2. Install Dependencies
+### 2. Run Setup Script
+
+This setup script:
+
+- copies `config.example.yaml` to `config.yaml` if `config.yaml` does not already exist
+- installs Go dependencies
+- installs npm dependencies
 
 ```bash
-# Go dependencies
-go mod download
-
-# Node dependencies (for Tailwind)
-npm install
+python3 scripts/setup.py
 ```
 
 ### 3. Configure
-
-Copy the example config and update as needed:
-
-```bash
-cp config.example.yaml config.yaml
-```
 
 Edit `config.yaml`:
 

@@ -2,6 +2,7 @@ tmp/
 bin/
 data/
 node_modules/
+__pycache__/
 
 package-lock.json
 config.yaml
