@@ -162,20 +162,29 @@ func (l *Listener) acceptLoop(ln net.Listener, quitCh <-chan struct{}) {
 func (l *Listener) handleConnection(conn net.Conn) {
 	defer conn.Close()
 
-	id := uuid.New().String()
+	remoteAddr := conn.RemoteAddr().String()
+	grunt := GetGruntByListenerAndAddress(l.ID, remoteAddr)
+	id := ""
 
-	if Grunts[id] == nil {
-		Grunts[id] = NewGrunt(id, l.ID, conn.RemoteAddr().String(), "Active", time.Now().Format("2006-01-02 15:04:05"))
-		l.UpdateStatus("Active", time.Now().Format("2006-01-02 15:04:05"))
-		Listeners[l.ID] = l
-		l.GruntCount = len(Grunts)
+	if grunt == nil {
+		id = uuid.New().String()
+		Grunts[id] = NewGrunt(id, l.ID, remoteAddr, "Active", time.Now().Format("2006-01-02 15:04:05"))
+	} else {
+		id = grunt.ID
+		if err := grunt.UpdateStatus("Active", time.Now().Format("2006-01-02 15:04:05")); err != nil {
+			log.Printf("Failed to update grunt %s status: %v", id, err)
+		}
 	}
+
+	l.UpdateStatus("Active", time.Now().Format("2006-01-02 15:04:05"))
+	Listeners[l.ID] = l
+	l.GruntCount = len(Grunts)
 
 	gruntConnectionsMu.Lock()
 	gruntConnections[id] = conn
 	gruntConnectionsMu.Unlock()
 
-	log.Printf("Accepted connection from %s", conn.RemoteAddr().String())
+	log.Printf("Accepted connection from %s (grunt: %s)", remoteAddr, id)
 
 	buf := make([]byte, 2048)
 

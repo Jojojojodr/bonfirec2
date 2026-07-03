@@ -168,3 +168,15 @@ func GetGruntsByListenerID(listenerID string) ([]*Grunt, error) {
 	}
 	return grunts, nil
 }
+
+func GetGruntByListenerAndAddress(listenerID, address string) *Grunt {
+	for _, grunt := range Grunts {
+		if grunt == nil {
+			continue
+		}
+		if grunt.ListenerID == listenerID && grunt.Address == address {
+			return grunt
+		}
+	}
+	return nil
+}

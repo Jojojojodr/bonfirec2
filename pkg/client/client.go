@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strconv"
 	"strings"
 	"time"
 
@@ -19,19 +20,36 @@ import (
 var input = make(chan string)
 
 type Client struct {
-	Port    string
-	Address string
-	Conn    net.Conn
+	Port      string
+	Address   string
+	LocalPort string
+	Conn      net.Conn
 }
 
 func (c *Client) Connect() {
 	address := c.Address + ":" + c.Port
+	dialer := net.Dialer{}
+	if c.LocalPort != "" {
+		localPort, err := strconv.Atoi(c.LocalPort)
+		if err != nil || localPort <= 0 {
+			log.Printf("Invalid local port %q, using ephemeral source port", c.LocalPort)
+		} else {
+			localIP := net.ParseIP("127.0.0.1")
+			if c.Address != "localhost" && c.Address != "127.0.0.1" {
+				localIP = nil
+			}
+			dialer.LocalAddr = &net.TCPAddr{IP: localIP, Port: localPort}
+			log.Printf("Using static local source port %d", localPort)
+		}
+	}
+
 	go c.handleMessageInput()
+	defer c.Close()
 
 	for {
 		var conn net.Conn
 		var err error
-		conn, err = net.Dial("tcp", address)
+		conn, err = dialer.Dial("tcp", address)
 		if err != nil {
 			log.Printf("Failed to connect to server: %v. Retrying in 5 seconds...", err)
 			time.Sleep(5 * time.Second)
@@ -39,6 +57,7 @@ func (c *Client) Connect() {
 		}
 
 		log.Printf("Connected to server at %s", address)
+		log.Printf("Client local address: %s", conn.LocalAddr())
 
 		// Handle communication with the server
 		c.Conn = conn
@@ -49,7 +68,6 @@ func (c *Client) Connect() {
 				log.Printf("Connection ended: %v. Reconnecting...", err)
 			}
 		}
-		conn.Close()
 	}
 }
 
@@ -59,6 +77,7 @@ func (c *Client) Close() {
 			log.Printf("Error closing connection: %v", err)
 		}
 	}
+	c.Conn = nil
 }
 
 func (c *Client) handleConnection() error {
@@ -131,11 +150,12 @@ func (c *Client) handleMessageSend(readErr <-chan error) error {
 	}
 }
 
-func NewClient(port string, address string) *Client {
+func NewClient(port string, address string, localPort string) *Client {
 	return &Client{
-		Port:    port,
-		Address: address,
-		Conn:    nil,
+		Port:      port,
+		Address:   address,
+		LocalPort: localPort,
+		Conn:      nil,
 	}
 }
 
