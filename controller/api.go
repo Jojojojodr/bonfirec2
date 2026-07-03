@@ -3,6 +3,7 @@ package controller
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/Jojojojodr/bonfirec2"
 
@@ -118,4 +119,53 @@ func SendGruntMessage(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "message sent successfully",
 	})
+}
+
+
+func GetTasks(c *gin.Context) {
+	tasks, err := bonfirec2.GetTasks()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"tasks": tasks})
+}
+
+func CreateTask(c *gin.Context) {
+	var req struct {
+		GruntID            string `json:"grunt_id" binding:"required"`
+		Command            string `json:"command" binding:"required"`
+		ScheduledFor       string `json:"scheduled_for" binding:"required"`
+		Repeat             bool   `json:"repeat"`
+		RepeatEverySeconds int    `json:"repeat_every_seconds"`
+		RepeatCount        int    `json:"repeat_count"`
+		Timeout            int    `json:"timeout"`
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if bonfirec2.Grunts[req.GruntID] == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "grunt not found"})
+		return
+	}
+
+	scheduledFor, err := time.Parse(time.RFC3339, req.ScheduledFor)
+	if err != nil {
+		if scheduledFor, err = time.Parse("2006-01-02 15:04:05", req.ScheduledFor); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "scheduled_for must be RFC3339 or 2006-01-02 15:04:05"})
+			return
+		}
+	}
+
+	task, err := bonfirec2.NewTask(req.GruntID, req.Command, scheduledFor, req.Repeat, req.RepeatEverySeconds, req.RepeatCount, req.Timeout)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"task": task})
 }

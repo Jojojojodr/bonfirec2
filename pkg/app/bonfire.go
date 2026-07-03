@@ -10,6 +10,10 @@ import (
 )
 
 func RestartServices(db *gorm.DB) {
+	if err := bonfirec2.StartTaskScheduler(db); err != nil {
+		log.Printf("Failed to start task scheduler: %v", err)
+	}
+
 	var listeners []bonfirec2.Listener
 	if err := db.Find(&listeners).Error; err != nil {
 		log.Printf("Failed to load listeners: %v", err)
@@ -56,6 +60,7 @@ func RestartServices(db *gorm.DB) {
 func ShutdownServices(sigCh <-chan os.Signal) {
 	sig := <-sigCh
 	log.Printf("Received signal %s, marking grunts inactive...", sig)
+	bonfirec2.StopTaskScheduler()
 	bonfirec2.SetAllGruntsInactive()
 	os.Exit(0)
 }

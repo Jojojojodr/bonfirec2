@@ -26,6 +26,10 @@ func SetupApiRouter(router *gin.Engine) *gin.Engine {
 	api.GET("/health", controller.GetHealth)
 	api.GET("/grunts", controller.GetGrunts)
 
+	tasks := api.Group("/tasks")
+	tasks.GET("/", controller.GetTasks)
+	tasks.POST("/", controller.CreateTask)
+
 	listeners := api.Group("/listeners")
 	listeners.GET("/", controller.GetListeners)
 	listeners.POST("/", controller.CreateListener)

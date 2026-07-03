@@ -17,6 +17,7 @@ BonFire C2 is a clean, polished dashboard application designed for educational p
 - 🎨 **Modern Dashboard UI** - Built with Tailwind CSS and Templ components
 - 🔊 **Listener Management** - Create, start, and monitor TCP/network listeners
 - 📊 **Real-time Monitoring** - View active listeners with status and metrics
+- ⏰ **Scheduled Tasks** - Queue commands for a future time and repeat them on an interval
 - 💾 **Persistent Storage** - SQLite or PostgreSQL database support
 - 🌓 **Dark Theme** - Eye-friendly interface with customizable components
 - 🔄 **Hot Reload** - Automatic asset compilation with Air for development

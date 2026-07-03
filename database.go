@@ -49,6 +49,7 @@ func (d *Database) Connect() error {
 	err = d.db.AutoMigrate(
 		&Listener{},
 		&Grunt{},
+		&Task{},
 		&models.Message{},
 	)
 	if err != nil {
