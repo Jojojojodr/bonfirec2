@@ -63,3 +63,8 @@ func GruntTerminalMessagesPartial(c *gin.Context) {
 	c.Status(http.StatusOK)
 	components.GruntTerminalMessages(grunt).Render(c.Request.Context(), c.Writer)
 }
+
+func NotFound(c *gin.Context) {
+	c.Status(http.StatusNotFound)
+	web.NotFound().Render(c.Request.Context(), c.Writer)
+}

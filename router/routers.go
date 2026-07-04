@@ -18,6 +18,8 @@ func SetupRouter(router *gin.Engine) *gin.Engine {
 	grunts.GET("/", controller.GruntsView)
 	grunts.GET("/g", controller.GruntDetailView)
 
+	router.NoRoute(controller.NotFound)
+
 	return router
 }
 
