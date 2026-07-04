@@ -251,7 +251,7 @@ func GruntView(grunt *bonfirec2.Grunt) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</datalist> <button type=\"submit\" class=\"rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-500/30\">send</button></div></form></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</datalist> <button type=\"submit\" class=\"rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-500/30\">send</button></div></form></div></div></div></div><script>\n        (() => {\n            const scrollTerminalToBottom = () => {\n                const terminal = document.getElementById(\"grunt-terminal-output\")\n                if (!terminal) {\n                    return\n                }\n\n                terminal.scrollTop = terminal.scrollHeight\n            }\n\n            if (document.readyState === \"loading\") {\n                document.addEventListener(\"DOMContentLoaded\", scrollTerminalToBottom, { once: true })\n            } else {\n                scrollTerminalToBottom()\n            }\n\n            if (!window.__gruntTerminalAutoScrollBound) {\n                window.__gruntTerminalAutoScrollBound = true\n                document.body.addEventListener(\"htmx:afterSwap\", (event) => {\n                    const target = event.target\n                    if (!target || target.id !== \"grunt-terminal-output\") {\n                        return\n                    }\n\n                    target.scrollTop = target.scrollHeight\n                })\n            }\n        })()\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -296,7 +296,7 @@ func GruntTerminalMessages(grunt *bonfirec2.Grunt) templ.Component {
 					var templ_7745c5c3_Var14 string
 					templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(message.Content)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 160, Col: 101}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 191, Col: 101}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 					if templ_7745c5c3_Err != nil {
@@ -314,7 +314,7 @@ func GruntTerminalMessages(grunt *bonfirec2.Grunt) templ.Component {
 					var templ_7745c5c3_Var15 string
 					templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(message.Content)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 162, Col: 101}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 193, Col: 101}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 					if templ_7745c5c3_Err != nil {
@@ -377,7 +377,7 @@ func gruntRow(grunt *bonfirec2.Grunt) templ.Component {
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 176, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 207, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
@@ -390,7 +390,7 @@ func gruntRow(grunt *bonfirec2.Grunt) templ.Component {
 		var templ_7745c5c3_Var19 string
 		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ListenerID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 177, Col: 70}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 208, Col: 70}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 		if templ_7745c5c3_Err != nil {
@@ -418,7 +418,7 @@ func gruntRow(grunt *bonfirec2.Grunt) templ.Component {
 		var templ_7745c5c3_Var20 string
 		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.LastCheckIn)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 191, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 222, Col: 71}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {

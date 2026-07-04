@@ -148,6 +148,37 @@ templ GruntView(grunt *bonfirec2.Grunt) {
             </div>
         </div>
     </div>
+
+    <script>
+        (() => {
+            const scrollTerminalToBottom = () => {
+                const terminal = document.getElementById("grunt-terminal-output")
+                if (!terminal) {
+                    return
+                }
+
+                terminal.scrollTop = terminal.scrollHeight
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", scrollTerminalToBottom, { once: true })
+            } else {
+                scrollTerminalToBottom()
+            }
+
+            if (!window.__gruntTerminalAutoScrollBound) {
+                window.__gruntTerminalAutoScrollBound = true
+                document.body.addEventListener("htmx:afterSwap", (event) => {
+                    const target = event.target
+                    if (!target || target.id !== "grunt-terminal-output") {
+                        return
+                    }
+
+                    target.scrollTop = target.scrollHeight
+                })
+            }
+        })()
+    </script>
 }
 
 templ GruntTerminalMessages(grunt *bonfirec2.Grunt) {
