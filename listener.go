@@ -185,14 +185,17 @@ func (l *Listener) handleConnection(conn net.Conn) {
 	gruntConnectionsMu.Unlock()
 
 	log.Printf("Accepted connection from %s (grunt: %s)", remoteAddr, id)
+	NotifyGruntConnected(id, l.ID, remoteAddr)
 
 	buf := make([]byte, 2048)
 
 	for {
 		n, err := conn.Read(buf)
 		if err != nil {
+			reason := err.Error()
 			if err == io.EOF {
 				log.Printf("Connection closed by remote: %s", conn.RemoteAddr().String())
+				reason = "remote closed connection"
 			} else {
 				log.Printf("Error reading from connection: %v", err)
 			}
@@ -208,6 +211,7 @@ func (l *Listener) handleConnection(conn net.Conn) {
 			gruntConnectionsMu.Lock()
 			delete(gruntConnections, id)
 			gruntConnectionsMu.Unlock()
+			NotifyGruntDisconnected(id, l.ID, remoteAddr, reason)
 			return
 		}
 
@@ -216,6 +220,7 @@ func (l *Listener) handleConnection(conn net.Conn) {
 		if err := SaveGruntMessage(id, l.ID, incoming, false); err != nil {
 			log.Printf("Failed to save message for grunt %s: %v", id, err)
 		}
+		NotifyGruntMessage(id, l.ID, incoming)
 
 		select {
 		case l.msgch <- buf[:n]:

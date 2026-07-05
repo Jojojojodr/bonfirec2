@@ -2,6 +2,7 @@ package components
 
 import (
     "fmt"
+
     "github.com/Jojojojodr/bonfirec2"
 )
 
@@ -134,20 +135,35 @@ templ systemStatusPanel() {
 
 templ recentActivityPanel() {
     <div class="rounded-[2rem] border border-white/10 bg-slate-900/75 p-6 shadow-lg shadow-slate-950/20 backdrop-blur-xl">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-sm text-slate-400">Recent callbacks</p>
-                <h2 class="mt-1 text-lg font-semibold text-white">Latest grunt events</h2>
-            </div>
-            <span class="text-xs uppercase tracking-[0.2em] text-slate-500">Now</span>
+        <div id="dashboard-notifications-panel" hx-get="/actions/partials/dashboard/notifications" hx-trigger="load, every 3s" hx-swap="innerHTML">
+            @RecentActivityPanelBody()
         </div>
+    </div>
+}
 
-        <div class="mt-5 space-y-3 text-sm text-slate-300">
-            @activityRow("grunt-win-021 checked in from 10.12.4.23", "12s ago", "text-emerald-300")
-            @activityRow("grunt-lnx-008 executed task list process", "45s ago", "text-cyan-300")
-            @activityRow("listener :53 latency spike detected", "2m ago", "text-amber-300")
-            @activityRow("grunt-win-017 missed heartbeat threshold", "4m ago", "text-rose-300")
+templ RecentActivityPanelBody() {
+    <div class="flex items-center justify-between">
+        <div>
+            <p class="text-sm text-slate-400">Recent notifications</p>
+            <h2 class="mt-1 text-lg font-semibold text-white">Latest grunt and task events</h2>
         </div>
+        <span class="text-xs uppercase tracking-[0.2em] text-slate-500">Live</span>
+    </div>
+
+    <div class="mt-5 space-y-3 text-sm text-slate-300">
+        if len(bonfirec2.Notifications.Latest(10)) == 0 {
+            <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-slate-400">No notifications yet.</div>
+        } else {
+            for _, notification := range bonfirec2.Notifications.Latest(10) {
+                if notification.Level == "warning" {
+                    @activityRow(notification.Message, notification.CreatedAt, "text-amber-300")
+                } else if notification.Level == "success" {
+                    @activityRow(notification.Message, notification.CreatedAt, "text-emerald-300")
+                } else {
+                    @activityRow(notification.Message, notification.CreatedAt, "text-cyan-300")
+                }
+            }
+        }
     </div>
 }
 

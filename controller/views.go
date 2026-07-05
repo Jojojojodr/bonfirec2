@@ -68,3 +68,9 @@ func NotFound(c *gin.Context) {
 	c.Status(http.StatusNotFound)
 	web.NotFound().Render(c.Request.Context(), c.Writer)
 }
+
+
+func DashboardNotificationsPartial(c *gin.Context) {
+	c.Status(http.StatusOK)
+	components.RecentActivityPanelBody().Render(c.Request.Context(), c.Writer)
+}

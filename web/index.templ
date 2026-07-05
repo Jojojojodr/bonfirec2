@@ -15,6 +15,107 @@ templ Layout(title string) {
                 { children... }
             </main>
         </div>
+        <div id="notification-toast-root" style="position: fixed; right: 1rem; bottom: 1rem; display: grid; gap: 0.6rem; z-index: 1200;"></div>
+        <script>
+            (() => {
+                const STORAGE_KEY = "bonfire_notifications_last_seen"
+                const toastRoot = document.getElementById("notification-toast-root")
+                let lastSeenId = sessionStorage.getItem(STORAGE_KEY)
+
+                const askPermission = () => {
+                    if (!("Notification" in window)) {
+                        return
+                    }
+
+                    if (Notification.permission === "default") {
+                        Notification.requestPermission().catch(() => {})
+                    }
+                }
+
+                const showToast = (notification) => {
+                    if (!toastRoot) {
+                        return
+                    }
+
+                    const levelColor = notification.level === "warning"
+                        ? "rgba(251, 191, 36, 0.92)"
+                        : notification.level === "success"
+                            ? "rgba(52, 211, 153, 0.92)"
+                            : "rgba(56, 189, 248, 0.92)"
+
+                    const toast = document.createElement("div")
+                    toast.style.cssText = "min-width: 260px; max-width: 340px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(15,23,42,0.92); color: rgba(241,245,249,0.98); padding: 0.75rem 0.9rem; box-shadow: 0 10px 30px rgba(0,0,0,0.35); opacity: 0; transform: translateY(8px); transition: all 0.2s ease;"
+                    toast.innerHTML = `<div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.2rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:999px; background:${levelColor};"></span><strong style="font-size:0.82rem;">${notification.title || "Notification"}</strong></div><div style="font-size:0.82rem; line-height:1.35;">${notification.message || ""}</div>`
+                    toastRoot.prepend(toast)
+
+                    requestAnimationFrame(() => {
+                        toast.style.opacity = "1"
+                        toast.style.transform = "translateY(0)"
+                    })
+
+                    setTimeout(() => {
+                        toast.style.opacity = "0"
+                        toast.style.transform = "translateY(6px)"
+                        setTimeout(() => toast.remove(), 250)
+                    }, 5500)
+                }
+
+                const showBrowserNotification = (notification) => {
+                    if (!("Notification" in window)) {
+                        return
+                    }
+                    if (Notification.permission !== "granted") {
+                        return
+                    }
+
+                    const body = notification.message || ""
+                    try {
+                        new Notification(notification.title || "BonFireC2 Notification", { body })
+                    } catch (_) {
+                    }
+                }
+
+                const processNotifications = (items) => {
+                    if (!Array.isArray(items) || items.length === 0) {
+                        return
+                    }
+
+                    if (!lastSeenId) {
+                        lastSeenId = items[0].id
+                        sessionStorage.setItem(STORAGE_KEY, lastSeenId)
+                        return
+                    }
+
+                    const lastSeenIndex = items.findIndex((item) => item.id === lastSeenId)
+                    const unseen = lastSeenIndex >= 0 ? items.slice(0, lastSeenIndex).reverse() : items.slice().reverse()
+
+                    unseen.forEach((notification) => {
+                        showToast(notification)
+                        showBrowserNotification(notification)
+                    })
+
+                    lastSeenId = items[0].id
+                    sessionStorage.setItem(STORAGE_KEY, lastSeenId)
+                }
+
+                const pollNotifications = async () => {
+                    try {
+                        const response = await fetch("/api/notifications?limit=15", { headers: { "Accept": "application/json" } })
+                        if (!response.ok) {
+                            return
+                        }
+
+                        const payload = await response.json()
+                        processNotifications(payload.notifications || [])
+                    } catch (_) {
+                    }
+                }
+
+                askPermission()
+                pollNotifications()
+                window.setInterval(pollNotifications, 4000)
+            })()
+        </script>
     </body>
     </html>
 }

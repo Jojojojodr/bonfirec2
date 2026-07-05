@@ -27,6 +27,7 @@ func SetupApiRouter(router *gin.Engine) *gin.Engine {
 	api := router.Group("/api")
 	api.GET("/health", controller.GetHealth)
 	api.GET("/grunts", controller.GetGrunts)
+	api.GET("/notifications", controller.GetNotifications)
 
 	tasks := api.Group("/tasks")
 	tasks.GET("/", controller.GetTasks)
@@ -53,6 +54,7 @@ func SetupActionRouter(router *gin.Engine) *gin.Engine {
 
 	partials := action.Group("/partials")
 	partials.GET("/dashboard/active-grunts", controller.DashboardActiveGruntsPartial)
+	partials.GET("/dashboard/notifications", controller.DashboardNotificationsPartial)
 	partials.GET("/grunts/terminal/messages", controller.GruntTerminalMessagesPartial)
 
 	return router

@@ -3,12 +3,13 @@ package controller
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/Jojojojodr/bonfirec2"
 
-	"github.com/google/uuid"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func GetHealth(c *gin.Context) {
@@ -121,7 +122,6 @@ func SendGruntMessage(c *gin.Context) {
 	})
 }
 
-
 func GetTasks(c *gin.Context) {
 	tasks, err := bonfirec2.GetTasks()
 	if err != nil {
@@ -168,4 +168,26 @@ func CreateTask(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"task": task})
+}
+
+
+func GetNotifications(c *gin.Context) {
+	limit := 20
+	if rawLimit := c.Query("limit"); rawLimit != "" {
+		parsedLimit, err := strconv.Atoi(rawLimit)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "limit must be an integer"})
+			return
+		}
+		if parsedLimit > 0 {
+			limit = parsedLimit
+		}
+	}
+
+	if limit > 100 {
+		limit = 100
+	}
+
+	notifications := bonfirec2.Notifications.Latest(limit)
+	c.JSON(http.StatusOK, gin.H{"notifications": notifications})
 }
