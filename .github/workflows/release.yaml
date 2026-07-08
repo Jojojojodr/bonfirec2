@@ -59,8 +59,6 @@ jobs:
             archive: zip
       
     runs-on: ${{ matrix.os }}
-    # act can't run macOS/Windows runners locally; keep those for GitHub-hosted runs.
-    if: ${{ env.ACT != 'true' || matrix.os == 'ubuntu-latest' }}
 
     steps:
       - name: Checkout code
@@ -78,7 +76,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+          npm install
 
       - name: Install Go dependencies
         run: go mod download
@@ -102,8 +100,8 @@ jobs:
         run: |
           cd release
           if [[ "${{ matrix.goos }}" == "windows" && "${{ matrix.archive }}" == "zip" ]]; then
-            pwsh -Command "Compress-Archive -Path bonfirec2 -DestinationPath ../${{ matrix.namebf }}.zip"
-            pwsh -Command "Compress-Archive -Path client -DestinationPath ../${{ matrix.nameclient }}.zip"
+            Compress-Archive -Path bonfirec2 -DestinationPath ../${{ matrix.namebf }}.zip
+            Compress-Archive -Path client -DestinationPath ../${{ matrix.nameclient }}.zip
           elif [[ "${{ matrix.archive }}" == "zip" ]]; then
             zip -r ../${{ matrix.namebf }}.zip bonfirec2
             zip -r ../${{ matrix.nameclient }}.zip client
@@ -113,14 +111,12 @@ jobs:
           fi
 
       - name: Upload Artifacts BonfireC2
-        if: ${{ env.ACT != 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.namebf }}
           path: ${{ matrix.namebf }}*
       
       - name: Upload Artifacts Client
-        if: ${{ env.ACT != 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.nameclient }}
@@ -129,7 +125,6 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ env.ACT != 'true' }}
 
     steps:
       - name: Download Artifacts BonfireC2
