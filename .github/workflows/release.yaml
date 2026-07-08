@@ -1,0 +1,162 @@
+name: Create New Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            goos: linux
+            goarch: amd64
+            namebf: bonfirec2-linux-amd64
+            nameclient: bfc2-client-linux-amd64
+            binarybf: bonfirec2
+            binaryclient: bfc2-client
+            archive: tar.gz
+
+          - os: ubuntu-latest
+            goos: linux
+            goarch: arm64
+            namebf: bonfirec2-linux-arm64
+            nameclient: bfc2-client-linux-arm64
+            binarybf: bonfirec2
+            binaryclient: bfc2-client
+            archive: tar.gz
+
+          - os: macos-latest
+            goos: darwin
+            goarch: amd64
+            namebf: bonfirec2-darwin-amd64
+            nameclient: bfc2-client-darwin-amd64
+            binarybf: bonfirec2
+            binaryclient: bfc2-client
+            archive: tar.gz
+
+          - os: macos-latest
+            goos: darwin
+            goarch: arm64
+            namebf: bonfirec2-darwin-arm64
+            nameclient: bfc2-client-darwin-arm64
+            binarybf: bonfirec2
+            binaryclient: bfc2-client
+            archive: tar.gz
+
+          - os: windows-latest
+            goos: windows
+            goarch: amd64
+            namebf: bonfirec2-windows-amd64
+            nameclient: bfc2-client-windows-amd64
+            binarybf: bonfirec2.exe
+            binaryclient: bfc2-client.exe
+            archive: zip
+      
+    runs-on: ${{ matrix.os }}
+    # act can't run macOS/Windows runners locally; keep those for GitHub-hosted runs.
+    if: ${{ env.ACT != 'true' || matrix.os == 'ubuntu-latest' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.26.x
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+
+      - name: Install dependencies
+        run: |
+          npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+
+      - name: Install Go dependencies
+        run: go mod download
+
+      - name: Build Tailwind CSS
+        run: npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/styles.css --minify
+
+      - name: Create release package
+        run: |
+          mkdir -p release/bonfirec2
+          mkdir -p release/client
+          cp -r static release/bonfirec2/static
+          cp config.example.yaml release/bonfirec2/config.yaml
+      
+      - name: Build GO binaries
+        run: |
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o release/bonfirec2/${{ matrix.binarybf }} ./cmd/app/main.go
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o release/client/${{ matrix.binaryclient }} ./cmd/client/main.go
+
+      - name: Create archive
+        run: |
+          cd release
+          if [[ "${{ matrix.goos }}" == "windows" && "${{ matrix.archive }}" == "zip" ]]; then
+            pwsh -Command "Compress-Archive -Path bonfirec2 -DestinationPath ../${{ matrix.namebf }}.zip"
+            pwsh -Command "Compress-Archive -Path client -DestinationPath ../${{ matrix.nameclient }}.zip"
+          elif [[ "${{ matrix.archive }}" == "zip" ]]; then
+            zip -r ../${{ matrix.namebf }}.zip bonfirec2
+            zip -r ../${{ matrix.nameclient }}.zip client
+          else
+            tar -czf ../${{ matrix.namebf }}.tar.gz bonfirec2
+            tar -czf ../${{ matrix.nameclient }}.tar.gz client
+          fi
+
+      - name: Upload Artifacts BonfireC2
+        if: ${{ env.ACT != 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.namebf }}
+          path: ${{ matrix.namebf }}*
+      
+      - name: Upload Artifacts Client
+        if: ${{ env.ACT != 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.nameclient }}
+          path: ${{ matrix.nameclient }}*
+  
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ env.ACT != 'true' }}
+
+    steps:
+      - name: Download Artifacts BonfireC2
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bonfirec2-*
+          path: dist
+          merge-multiple: true
+
+      - name: Download Artifacts Client
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bfc2-client-*
+          path: dist
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            Release ${{ github.ref_name }} created by GitHub Actions.
+            Artifacts for all supported platforms are attached below.
+          files: |
+            dist/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

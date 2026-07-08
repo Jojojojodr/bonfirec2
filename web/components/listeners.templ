@@ -1,0 +1,238 @@
+package components
+
+import (
+    "github.com/Jojojojodr/bonfirec2"
+)
+
+templ ListenersHeader() {
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-200 shadow-lg shadow-emerald-950/20 backdrop-blur">
+                <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+                Active listeners
+            </div>
+            <div>
+                <h1 class="mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+                    List of all active listeners
+                </h1>
+                <p class="mt-3 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
+                    Monitor and manage all active listeners in the system.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+            <form action="/actions/new-listener" method="POST">
+                <button type="submit" class="inline-flex items-center justify-center rounded-full bg-emerald-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300">
+                    Start listener
+                </button>
+            </form>
+        </div>
+    </div>
+}
+
+templ ListenersTable() {
+    <div class="rounded-3xl border border-slate-700/60 bg-slate-900/85 p-5 shadow-xl shadow-slate-950/40 backdrop-blur">
+        <h2 class="text-lg font-semibold text-white">Active listeners</h2>
+        <p class="mt-1 text-sm text-slate-400">List of all active listeners in the system.</p>
+        <div class="mt-4 overflow-x-auto">
+            <table class="w-full table-auto border-collapse overflow-hidden rounded-2xl border border-slate-600/55 bg-slate-950/45 backdrop-blur-md">
+                <thead>
+                    <tr class="border-b border-slate-600/60 bg-slate-900/55 text-left text-sm font-semibold text-slate-300 backdrop-blur-sm">
+                        <th class="px-4 py-2">Listener ID</th>
+                        <th class="px-4 py-2">Address</th>
+                        <th class="px-4 py-2">Port</th>
+                        <th class="px-4 py-2">Protocol</th>
+                        <th class="px-4 py-2">Status</th>
+                        <th class="px-4 py-2">Last Check-in</th>
+                        <th class="px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    for _, listener := range bonfirec2.Listeners {
+                        @listenerRow(listener)
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+templ ListenerView(listener *bonfirec2.Listener) {
+    <div class="space-y-6">
+        <div class="rounded-3xl border border-slate-700/60 bg-slate-900/85 p-5 shadow-xl shadow-slate-950/40 backdrop-blur">
+            <div class="flex justify-between">
+                <div class="space-y-6">
+                    <h2 class="text-lg font-semibold text-white">Listener Details</h2>
+                    <p class="mt-1 text-sm text-slate-400">Detailed information about the selected listener.</p>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                    <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Grunts Connected</p>
+                    if listenerGrunts, err := bonfirec2.GetGruntsByListenerID(listener.ID); err != nil {
+                        <p class="mt-2 text-sm font-semibold text-red-300">Error</p>
+                    } else {
+                        <p class="mt-2 text-sm font-semibold text-white">{ len(listenerGrunts) }</p>
+                    }
+                </div>
+            </div>
+            <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                <div class="flex gap-4 sm:col-span-2 xl:col-span-3">
+                    <div class="flex gap-4 sm:col-span-2 xl:col-span-3 border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur rounded-2xl" style="width: 40%;">
+                        <div class="flex flex-col gap-4 sm:col-span-2 xl:col-span-3">
+                            <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                                <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Listener ID</p>
+                                <p class="mt-2 break-all text-sm font-semibold text-white">{ listener.ID }</p>
+                            </div>
+                            <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                                <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Address</p>
+                                <p class="mt-2 text-sm font-semibold text-white">{ listener.Address }</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4 sm:col-span-2 xl:col-span-3">
+                            <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                                <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Port</p>
+                                <p class="mt-2 text-sm font-semibold text-white">{ listener.Port }</p>
+                            </div>
+                            <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                                <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Protocol</p>
+                                <p class="mt-2 text-sm font-semibold text-white">{ listener.Protocol }</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4 mt-4 sm:col-span-2 xl:col-span-3">
+                        <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                            <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Status</p>
+                            <p class="mt-2 text-sm font-semibold text-emerald-300">{ listener.Status }</p>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                            <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Last Check-in</p>
+                            <p class="mt-2 text-sm font-semibold text-white">{ listener.LastCheckIn }</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4 mt-4 sm:col-span-2 xl:col-span-3">
+                        <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                            <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Created At</p>
+                            <p class="mt-2 text-sm font-semibold text-white">{ listener.CreatedAt }</p>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 shadow-lg shadow-slate-950/20 backdrop-blur">
+                            <p class="text-xs uppercase tracking-[0.16em] text-slate-400">Updated At</p>
+                            <p class="mt-2 text-sm font-semibold text-white">{ listener.UpdatedAt }</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded-3xl border border-slate-700/60 bg-slate-900/85 p-5 shadow-xl shadow-slate-950/40 backdrop-blur">
+            <h2 class="text-lg font-semibold text-white">Connected Grunts</h2>
+            <p class="mt-1 text-sm text-slate-400">All grunts currently associated with this listener.</p>
+            <div class="mt-4 overflow-x-auto">
+                <table class="w-full table-auto border-collapse overflow-hidden rounded-2xl border border-slate-600/55 bg-slate-950/45 backdrop-blur-md">
+                    <thead>
+                        <tr class="border-b border-slate-600/60 bg-slate-900/55 text-left text-sm font-semibold text-slate-300 backdrop-blur-sm">
+                            <th class="px-4 py-2">Grunt ID</th>
+                            <th class="px-4 py-2">Address</th>
+                            <th class="px-4 py-2">Status</th>
+                            <th class="px-4 py-2">Last Check-in</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        if listenerGrunts, err := bonfirec2.GetGruntsByListenerID(listener.ID); err != nil {
+                            <tr class="border-b border-slate-700/45 bg-slate-950/30">
+                                <td colspan="4" class="px-4 py-3 text-sm text-red-300">Failed to load grunts for this listener.</td>
+                            </tr>
+                        } else {
+                            if len(listenerGrunts) == 0 {
+                                <tr class="border-b border-slate-700/45 bg-slate-950/30">
+                                    <td colspan="4" class="px-4 py-3 text-sm text-slate-400">No grunts connected to this listener.</td>
+                                </tr>
+                            }
+                            for _, grunt := range listenerGrunts {
+                                @listenerGruntRow(grunt)
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+templ listenerGruntRow(grunt *bonfirec2.Grunt) {
+    <tr
+        class="border-b border-slate-700/45 bg-slate-950/30 hover:bg-slate-900/45 cursor-pointer"
+        role="link"
+        tabindex="0"
+        onclick={ directToGruntDetail(grunt.ID) }
+    >
+        <td class="px-4 py-2 text-sm text-slate-200">{grunt.ID}</td>
+        <td class="px-4 py-2 text-sm text-slate-200">{grunt.Address}</td>
+        <td class="px-4 py-2 text-sm">
+            if grunt.Status == "Active" {
+                <span class="inline-flex items-center gap-2 rounded-full bg-green-400/20 px-3 py-1 text-xs font-medium text-green-300">
+                    <span class="h-2 w-2 rounded-full bg-green-300"></span>
+                    Active
+                </span>
+            } else {
+                <span class="inline-flex items-center gap-2 rounded-full bg-red-400/20 px-3 py-1 text-xs font-medium text-red-300">
+                    <span class="h-2 w-2 rounded-full bg-red-300"></span>
+                    Inactive
+                </span>
+            }
+        </td>
+        <td class="px-4 py-2 text-sm text-slate-400">{grunt.LastCheckIn}</td>
+    </tr>
+}
+
+templ listenerRow(listener *bonfirec2.Listener) {
+    <tr
+        class="border-b border-slate-700/45 bg-slate-950/30 hover:bg-slate-900/45 cursor-pointer"
+        role="link"
+        tabindex="0"
+        onclick={ directToListenerDetail(listener.ID) }
+    >
+        <td class="px-4 py-2 text-sm text-slate-200">{listener.ID}</td>
+        <td class="px-4 py-2 text-sm text-slate-200">{listener.Address}</td>
+        <td class="px-4 py-2 text-sm text-slate-200">{listener.Port}</td>
+        <td class="px-4 py-2 text-sm text-slate-200">{listener.Protocol}</td>
+        <td class="px-4 py-2 text-sm">
+            if listener.Status == "Active" {
+                <span class="inline-flex items-center gap-2 rounded-full bg-green-400/20 px-3 py-1 text-xs font-medium text-green-300">
+                    <span class="h-2 w-2 rounded-full bg-green-300"></span>
+                    Active
+                </span>
+            } else {
+                <span class="inline-flex items-center gap-2 rounded-full bg-red-400/20 px-3 py-1 text-xs font-medium text-red-300">
+                    <span class="h-2 w-2 rounded-full bg-red-300"></span>
+                    Inactive
+                </span>
+            }
+        </td>
+        <td class="px-4 py-2 text-sm text-slate-400">{listener.LastCheckIn}</td>
+        <td class="px-4 py-2 text-sm text-slate-400">
+            if listener.Status == "Active" {
+                <form action={ "/actions/stop-listener?id=" + listener.ID } method="POST">
+                    <button
+                        class="inline-flex items-center gap-2 rounded-full bg-red-400/20 px-3 py-1 text-xs font-medium text-red-300 hover:bg-red-400/30"
+                        type="submit"
+                    >
+                        Stop Listener
+                    </button>
+                </form>
+            } else {
+                <form action={ "/actions/start-listener?id=" + listener.ID } method="POST">
+                    <button
+                        class="inline-flex items-center gap-2 rounded-full bg-green-400/20 px-3 py-1 text-xs font-medium text-green-300 hover:bg-green-400/30"
+                        type="submit"
+                    >
+                        Start Listener
+                    </button>
+                </form>
+            }
+        </td>
+    </tr>
+}
+
+script directToListenerDetail(id string) {
+    window.location.href = "/listeners/l?id=" + id;
+}

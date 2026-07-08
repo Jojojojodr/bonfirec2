@@ -1,0 +1,40 @@
+package web
+
+import (
+	"github.com/Jojojojodr/bonfirec2"
+    "github.com/Jojojojodr/bonfirec2/web/components"
+)
+
+templ ListenersList() {
+    @Layout("Listeners") {
+        <section class="space-y-8">
+            @components.ListenersHeader()
+            @components.ListenersTable()
+        </section>
+    }
+}
+
+templ ListenerDetail(listener *bonfirec2.Listener) {
+    @Layout("Listener Detail") {
+        <section class="space-y-8">
+           @components.ListenerView(listener) 
+        </section>
+    }
+}
+
+templ GruntsList() {
+    @Layout("Grunts") {
+        <section class="space-y-8">
+            @components.GruntsHeader()
+            @components.GruntsTable()
+        </section>
+    }
+}
+
+templ GruntDetail(grunt *bonfirec2.Grunt) {
+    @Layout("Grunt Detail") {
+        <section class="space-y-8">
+           @components.GruntView(grunt) 
+        </section>
+    }
+}

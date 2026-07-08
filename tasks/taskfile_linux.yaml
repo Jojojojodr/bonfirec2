@@ -1,0 +1,7 @@
+version:  '3'
+
+vars:
+  GOOS: linux
+  GOARCH: amd64
+  EXECUTABLE_BONFIRE_NAME: app
+  EXECUTABLE_CLIENT_NAME: client

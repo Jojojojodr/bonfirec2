@@ -1,0 +1,175 @@
+package components
+
+import (
+    "fmt"
+
+    "github.com/Jojojojodr/bonfirec2"
+)
+
+templ DashboardHero() {
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-200 shadow-lg shadow-emerald-950/20 backdrop-blur">
+                <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+                Command and control dashboard
+            </div>
+            <div>
+                <h1 class="mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+                    Active listeners and grunts
+                </h1>
+                <p class="mt-3 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
+                    Monitor live listeners, check grunt health, and triage activity from a single operational view.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+            <form action="/actions/new-listener" method="POST">
+                <button type="submit" class="inline-flex items-center justify-center rounded-full bg-emerald-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300">
+                    Start listener
+                </button>
+            </form>
+            <button type="button" class="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+                Open grunt list
+            </button>
+        </div>
+    </div>
+}
+
+templ DashboardStats() {
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        @statCard("Listeners", fmt.Sprintf("%d", len(bonfirec2.Listeners)), fmt.Sprintf("%d active", len(bonfirec2.GetActiveListeners())), "rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300")
+        @statCard("Grunts", fmt.Sprintf("%d", len(bonfirec2.Grunts)), fmt.Sprintf("%d active", len(bonfirec2.GetActiveGrunts())), "rounded-full bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-300")
+        @statCard("Avg callback", "43s", "-9s", "rounded-full bg-amber-400/10 px-3 py-1 text-xs font-medium text-amber-300")
+        @statCard("Dormant grunts", "5", "Needs attention", "rounded-full bg-rose-400/10 px-3 py-1 text-xs font-medium text-rose-300")
+    </div>
+}
+
+templ DashboardContent() {
+    <div class="grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
+        @workQueuePanel()
+        <div class="space-y-6">
+            @systemStatusPanel()
+            @recentActivityPanel()
+        </div>
+    </div>
+}
+
+templ ActiveGruntsPanelBody() {
+    <div class="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div>
+            <p class="text-sm text-slate-400">Grunt activity</p>
+            <h2 class="mt-1 text-lg font-semibold text-white">Active grunts</h2>
+        </div>
+        <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-200">{ fmt.Sprintf("%d online", len(bonfirec2.GetActiveGrunts())) }</span>
+    </div>
+
+    <div class="mt-5 space-y-3">
+        if len(bonfirec2.GetActiveGrunts()) == 0 {
+            <div class="grid gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                <p class="text-sm text-slate-400">No active grunts connected.</p>
+            </div>
+        } else {
+            for _, grunt := range bonfirec2.GetActiveGrunts() {
+                @queueRow(grunt.ID, grunt.Address, "Listener "+grunt.ListenerID, "Last seen "+grunt.LastCheckIn, "text-sm font-medium text-emerald-300")
+            }
+        }
+    </div>
+}
+
+templ statCard(label string, value string, badge string, badgeStyle string) {
+    <div class="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-950/20 backdrop-blur">
+        <p class="text-sm text-slate-400">{label}</p>
+        <div class="mt-4 flex items-end justify-between gap-4">
+            <p class="text-3xl font-semibold tracking-tight text-white">{value}</p>
+            <span class={ badgeStyle }>{badge}</span>
+        </div>
+    </div>
+}
+
+templ workQueuePanel() {
+    <div class="rounded-[2rem] border border-white/10 bg-slate-900/75 p-6 shadow-2xl shadow-slate-950/40 backdrop-blur-xl">
+        <div id="active-grunts-panel" hx-get="/actions/partials/dashboard/active-grunts" hx-trigger="load, every 5s" hx-swap="innerHTML">
+            @ActiveGruntsPanelBody()
+        </div>
+    </div>
+}
+
+templ queueRow(orderID string, location string, stage string, eta string, etaStyle string) {
+    <div class="grid gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 sm:grid-cols-[1fr_auto_auto] sm:items-center">
+        <div>
+            <p class="font-medium text-white">{orderID}</p>
+            <p class="mt-1 text-sm text-slate-400">{location}</p>
+        </div>
+        <p class="text-sm text-slate-300">{stage}</p>
+        <p class={ etaStyle }>{eta}</p>
+    </div>
+}
+
+templ systemStatusPanel() {
+    <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-lg shadow-slate-950/20 backdrop-blur">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-slate-400">Listener status</p>
+                <h2 class="mt-1 text-lg font-semibold text-white">Ports and bind health</h2>
+            </div>
+            <span class="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300">7 running</span>
+        </div>
+
+        <div class="mt-5 space-y-3 text-sm text-slate-300">
+            <div class="flex items-center justify-between rounded-xl bg-slate-950/60 px-4 py-3">
+                <span>HTTP listener :8443</span>
+                <span class="text-emerald-300">Online</span>
+            </div>
+            <div class="flex items-center justify-between rounded-xl bg-slate-950/60 px-4 py-3">
+                <span>SMB listener /pipe/c2</span>
+                <span class="text-emerald-300">Online</span>
+            </div>
+            <div class="flex items-center justify-between rounded-xl bg-slate-950/60 px-4 py-3">
+                <span>DNS listener corp.local</span>
+                <span class="text-amber-300">Intermittent</span>
+            </div>
+        </div>
+    </div>
+}
+
+templ recentActivityPanel() {
+    <div class="rounded-[2rem] border border-white/10 bg-slate-900/75 p-6 shadow-lg shadow-slate-950/20 backdrop-blur-xl">
+        <div id="dashboard-notifications-panel" hx-get="/actions/partials/dashboard/notifications" hx-trigger="load, every 3s" hx-swap="innerHTML">
+            @RecentActivityPanelBody()
+        </div>
+    </div>
+}
+
+templ RecentActivityPanelBody() {
+    <div class="flex items-center justify-between">
+        <div>
+            <p class="text-sm text-slate-400">Recent notifications</p>
+            <h2 class="mt-1 text-lg font-semibold text-white">Latest grunt and task events</h2>
+        </div>
+        <span class="text-xs uppercase tracking-[0.2em] text-slate-500">Live</span>
+    </div>
+
+    <div class="mt-5 space-y-3 text-sm text-slate-300">
+        if len(bonfirec2.Notifications.Latest(10)) == 0 {
+            <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-slate-400">No notifications yet.</div>
+        } else {
+            for _, notification := range bonfirec2.Notifications.Latest(10) {
+                if notification.Level == "warning" {
+                    @activityRow(notification.Message, notification.CreatedAt, "text-amber-300")
+                } else if notification.Level == "success" {
+                    @activityRow(notification.Message, notification.CreatedAt, "text-emerald-300")
+                } else {
+                    @activityRow(notification.Message, notification.CreatedAt, "text-cyan-300")
+                }
+            }
+        }
+    </div>
+}
+
+templ activityRow(message string, timestamp string, timestampStyle string) {
+    <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+        <span>{message}</span>
+        <span class={ timestampStyle }>{timestamp}</span>
+    </div>
+}
