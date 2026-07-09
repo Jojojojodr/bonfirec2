@@ -1,0 +1,191 @@
+name: Create New Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            goos: linux
+            goarch: amd64
+            namebf: bonfirec2-linux-amd64
+            nameclient: bfc2-client-linux-amd64
+            binarybf: bonfirec2
+            binaryclient: bfc2-client
+            archive: tar.gz
+
+          - os: ubuntu-latest
+            goos: linux
+            goarch: arm64
+            namebf: bonfirec2-linux-arm64
+            nameclient: bfc2-client-linux-arm64
+            binarybf: bonfirec2
+            binaryclient: bfc2-client
+            archive: tar.gz
+
+          - os: macos-latest
+            goos: darwin
+            goarch: amd64
+            namebf: bonfirec2-darwin-amd64
+            nameclient: bfc2-client-darwin-amd64
+            binarybf: bonfirec2
+            binaryclient: bfc2-client
+            archive: tar.gz
+
+          - os: macos-latest
+            goos: darwin
+            goarch: arm64
+            namebf: bonfirec2-darwin-arm64
+            nameclient: bfc2-client-darwin-arm64
+            binarybf: bonfirec2
+            binaryclient: bfc2-client
+            archive: tar.gz
+
+          - os: windows-latest
+            goos: windows
+            goarch: amd64
+            namebf: bonfirec2-windows-amd64
+            nameclient: bfc2-client-windows-amd64
+            binarybf: bonfirec2.exe
+            binaryclient: bfc2-client.exe
+            archive: zip
+      
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.26.x
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24.x
+
+      - name: Install dependencies
+        run: |
+          npm install
+          go mod download
+
+      - name: Build Tailwind CSS
+        run: npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/styles.css --minify
+
+      - name: Create release package
+        run: |
+          mkdir -p release/bonfirec2
+          mkdir -p release/client
+          cp -r static release/bonfirec2/static
+          cp config.example.yaml release/bonfirec2/config.yaml
+      
+      - name: Build GO binaries (Unix)
+        if: matrix.goos != 'windows'
+        run: |
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o release/bonfirec2/${{ matrix.binarybf }} ./cmd/app/main.go
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o release/client/${{ matrix.binaryclient }} ./cmd/client/main.go
+      
+      - name: Build GO binaries (Windows)
+        if: matrix.goos == 'windows'
+        shell: pwsh
+        run: |
+          $env:GOOS = '${{ matrix.goos }}'
+          $env:GOARCH = '${{ matrix.goarch }}'
+          go build -o release/bonfirec2/${{ matrix.binarybf }} ./cmd/app/main.go
+          go build -o release/client/${{ matrix.binaryclient }} ./cmd/client/main.go
+
+      - name: Create archive
+        shell: bash
+        run: |
+          cd release
+          if [[ "${{ matrix.goos }}" == "windows" && "${{ matrix.archive }}" == "zip" ]]; then
+            pwsh -Command "Compress-Archive -Path bonfirec2 -DestinationPath ${{ matrix.namebf }}.zip"
+            pwsh -Command "Compress-Archive -Path client -DestinationPath ${{ matrix.nameclient }}.zip"
+          elif [[ "${{ matrix.archive }}" == "zip" ]]; then
+            zip -r ${{ matrix.namebf }}.zip bonfirec2
+            zip -r ${{ matrix.nameclient }}.zip client
+          else
+            tar -czf ${{ matrix.namebf }}.tar.gz bonfirec2
+            tar -czf ${{ matrix.nameclient }}.tar.gz client
+          fi
+
+      - name: Upload Artifacts BonfireC2
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.namebf }}
+          path: release/${{ matrix.namebf }}.${{ matrix.archive }}
+      
+      - name: Upload Artifacts Client
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.nameclient }}
+          path: release/${{ matrix.nameclient }}.${{ matrix.archive }}
+  
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            # BonfireC2 ${{ github.ref_name }}
+
+            Release ${{ github.ref_name }} created by GitHub Actions.
+
+            ## Server
+
+            ### Features
+
+            - Cross-platform support for Linux, macOS, and Windows.
+            - Support for AMD64 and ARM64 architectures.
+            - Web-based user interface for managing and monitoring connections.
+            - Command and Control (C2) functionality for remote administration.
+
+            ### Usage
+
+            1. Download the appropriate release package for your platform.
+            2. Extract the package to a desired location.
+            3. Configure the application using the provided config.yaml file.
+            4. Run the BonfireC2 server binary to start the C2 server.
+
+            ## Client
+
+            ### Features
+
+            - Cross-platform support for Linux, macOS, and Windows.
+            - Support for AMD64 and ARM64 architectures.
+            - Command-line interface for interacting with the BonfireC2 server.
+
+            ### Usage
+
+            1. Download the appropriate release package for your platform.
+            2. Extract the package to a desired location.
+            3. Run the client binary to connect to the BonfireC2 server.
+
+          files: |
+            release/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
