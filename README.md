@@ -27,8 +27,10 @@ BonFire C2 is a clean, polished dashboard application designed for educational p
 
 - **Go** 1.26.3 or higher
 - **Node.js** 16+ (for Tailwind CSS and asset building)
+- **Python** 3.14.6 of higher (for running the Setup script)
 - **Task** (task runner) - Install from [taskfile.dev](https://taskfile.dev)
 - **Templ** (Go HTML templating) - Install from [templ.guide](https://templ.guide)
+- **Air** (Go Live Reloading) - Install from [github.com](https://github.com/air-verse/air)
 
 ## Quick Start
 
@@ -93,23 +95,13 @@ Visit `http://localhost:8080` in your browser.
 ### Available Tasks
 
 ```bash
-# Development server with hot reload
-task dev
-
-# Build for Linux/amd64
-task build
-
-# Run the built application
-task run
-
-# Build CSS only
-task tasks:build-css
-
-# Watch CSS for changes
-task tasks:watch-css
-
-# Clean build artifacts
-task clean
+task # Run the code
+task client # Run the client code
+task dev # Development server with hot reload
+task build # Build the application
+task run # Run the built application
+task run-client # Run the built client
+task clean # Clean build artifacts
 ```
 
 ### Code Organization
@@ -237,9 +229,3 @@ This project is provided as-is for educational purposes. Use at your own risk an
 ## Support
 
 For issues, questions, or suggestions, please open an issue on the repository.
-
----
-
-**Last Updated:** June 2026  
-**Go Version:** 1.26.3+  
-**Node Version:** 16+
