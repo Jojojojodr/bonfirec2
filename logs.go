@@ -94,6 +94,22 @@ func LogGruntMessageSent(listenerID, gruntID, content string) error {
 	)
 }
 
+func LogGruntMessageReceived(gruntID, listenerID, content string) error {
+	trimmed := strings.TrimSpace(content)
+	if len(trimmed) > 160 {
+		trimmed = trimmed[:160] + "..."
+	}
+
+	return logEvent(
+		"grunt_message_received",
+		"info",
+		fmt.Sprintf("Received from grunt %s: %s", gruntID, trimmed),
+		listenerID,
+		gruntID,
+		"",
+	)
+}
+
 func LogTaskDispatched(task *Task) error {
 	if task == nil {
 		return nil

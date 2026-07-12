@@ -226,6 +226,9 @@ func (l *Listener) handleConnection(conn net.Conn) {
 		if err := SaveGruntMessage(id, l.ID, incoming, false); err != nil {
 			log.Printf("Failed to save message for grunt %s: %v", id, err)
 		}
+		if err := LogGruntMessageReceived(id, l.ID, incoming); err != nil {
+			log.Printf("Failed to save grunt receive log for %s: %v", id, err)
+		}
 		NotifyGruntMessage(id, l.ID, incoming)
 
 		select {
