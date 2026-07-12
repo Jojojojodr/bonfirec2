@@ -81,3 +81,8 @@ func DashboardNotificationsPartial(c *gin.Context) {
 	c.Status(http.StatusOK)
 	components.RecentActivityPanelBody().Render(c.Request.Context(), c.Writer)
 }
+
+func DashboardUpcomingTasksPartial(c *gin.Context) {
+	c.Status(http.StatusOK)
+	components.UpcomingTasksPanel().Render(c.Request.Context(), c.Writer)
+}

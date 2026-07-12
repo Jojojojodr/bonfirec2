@@ -68,6 +68,7 @@ func SetupActionRouter(router *gin.Engine) *gin.Engine {
 	partials := action.Group("/partials")
 	partials.GET("/dashboard/active-grunts", controller.DashboardActiveGruntsPartial)
 	partials.GET("/dashboard/notifications", controller.DashboardNotificationsPartial)
+	partials.GET("/dashboard/upcoming-tasks", controller.DashboardUpcomingTasksPartial)
 	partials.GET("/grunts/terminal/messages", controller.GruntTerminalMessagesPartial)
 
 	return router

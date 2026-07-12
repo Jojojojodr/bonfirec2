@@ -56,9 +56,15 @@ templ DashboardContent() {
     <div class="grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
         @workQueuePanel()
         <div class="space-y-6">
-            @systemStatusPanel()
+            @UpcomingTasksPanel()
             @recentActivityPanel()
         </div>
+    </div>
+}
+
+templ UpcomingTasksPanel() {
+    <div id="dashboard-upcoming-tasks-panel" hx-get="/actions/partials/dashboard/upcoming-tasks" hx-trigger="every 5s" hx-swap="outerHTML">
+        @systemStatusPanel()
     </div>
 }
 
@@ -114,30 +120,63 @@ templ queueRow(orderID string, location string, stage string, eta string, etaSty
 }
 
 templ systemStatusPanel() {
+    if tasks, err := bonfirec2.GetTasks(); err != nil {
     <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-lg shadow-slate-950/20 backdrop-blur">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm text-slate-400">Listener status</p>
-                <h2 class="mt-1 text-lg font-semibold text-white">Ports and bind health</h2>
+                <p class="text-sm text-slate-400">Task scheduler</p>
+                <h2 class="mt-1 text-lg font-semibold text-white">Upcoming tasks</h2>
             </div>
-            <span class="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300">7 running</span>
+            <span class="rounded-full bg-rose-400/10 px-3 py-1 text-xs font-medium text-rose-300">Error</span>
         </div>
 
         <div class="mt-5 space-y-3 text-sm text-slate-300">
-            <div class="flex items-center justify-between rounded-xl bg-slate-950/60 px-4 py-3">
-                <span>HTTP listener :8443</span>
-                <span class="text-emerald-300">Online</span>
-            </div>
-            <div class="flex items-center justify-between rounded-xl bg-slate-950/60 px-4 py-3">
-                <span>SMB listener /pipe/c2</span>
-                <span class="text-emerald-300">Online</span>
-            </div>
-            <div class="flex items-center justify-between rounded-xl bg-slate-950/60 px-4 py-3">
-                <span>DNS listener corp.local</span>
-                <span class="text-amber-300">Intermittent</span>
+            <div class="rounded-xl border border-rose-400/20 bg-rose-500/10 px-4 py-3 text-rose-200">
+                Failed to load upcoming tasks.
             </div>
         </div>
     </div>
+    } else {
+    <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-lg shadow-slate-950/20 backdrop-blur">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-slate-400">Task scheduler</p>
+                <h2 class="mt-1 text-lg font-semibold text-white">Upcoming tasks</h2>
+            </div>
+            <span class="rounded-full bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-300">{ fmt.Sprintf("%d queued", len(tasks)) }</span>
+        </div>
+
+        <div class="mt-5 space-y-3 text-sm text-slate-300">
+            if len(tasks) == 0 {
+                <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-slate-400">
+                    No upcoming tasks.
+                </div>
+            } else {
+                for i, task := range tasks {
+                    if i < 5 {
+                    <div class="flex items-center justify-between gap-3 rounded-xl bg-slate-950/60 px-4 py-3">
+                        <div class="min-w-0">
+                            <p class="truncate font-medium text-white">{ task.Command } · { task.GruntID }</p>
+                            <p class="mt-1 text-xs text-slate-400">next run { task.NextRunAt }</p>
+                        </div>
+                        if task.Status == "scheduled" {
+                            <span class="shrink-0 rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-medium text-emerald-300">{ task.Status }</span>
+                        } else if task.Status == "waiting" {
+                            <span class="shrink-0 rounded-full bg-amber-400/15 px-3 py-1 text-xs font-medium text-amber-300">{ task.Status }</span>
+                        } else if task.Status == "completed" {
+                            <span class="shrink-0 rounded-full bg-cyan-400/15 px-3 py-1 text-xs font-medium text-cyan-300">{ task.Status }</span>
+                        } else if task.Status == "cancelled" {
+                            <span class="shrink-0 rounded-full bg-rose-400/15 px-3 py-1 text-xs font-medium text-rose-300">{ task.Status }</span>
+                        } else {
+                            <span class="shrink-0 rounded-full bg-slate-400/15 px-3 py-1 text-xs font-medium text-slate-300">{ task.Status }</span>
+                        }
+                    </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+    }
 }
 
 templ recentActivityPanel() {
