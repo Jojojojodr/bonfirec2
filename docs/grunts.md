@@ -16,9 +16,10 @@ A grunt is a connected client session managed by a listener. Grunts appear in th
 
 ## API Endpoints
 
-- `GET /api/grunts` lists all grunts.
-- `GET /api/messages/grunt?grunt_id=...` returns message history for one grunt.
-- `POST /api/messages/grunt` saves a message for a grunt.
+- `GET /api/grunts/` lists all grunts.
+- `GET /api/grunts/g/?grunt_id=...` returns one grunt by ID.
+- `GET /api/grunts/g/messages/?grunt_id=...` returns message history for one grunt.
+- `POST /api/grunts/g/messages/m` saves a message for a grunt.
 - `POST /actions/grunts/terminal/command?id=...` sends a command from the web UI.
 
 ## Curl Examples
@@ -29,16 +30,22 @@ List grunts:
 curl -L http://localhost:8080/api/grunts
 ```
 
+Get one grunt by ID:
+
+```bash
+curl -L 'http://localhost:8080/api/grunts/g?grunt_id=GRUNT_ID'
+```
+
 Get message history for one grunt:
 
 ```bash
-curl -L http://localhost:8080/api/messages/grunt?grunt_id=GRUNT_ID
+curl -L 'http://localhost:8080/api/grunts/g/messages?grunt_id=GRUNT_ID'
 ```
 
 Save a message for a grunt:
 
 ```bash
-curl -X POST http://localhost:8080/api/messages/grunt \
+curl -X POST http://localhost:8080/api/grunts/g/messages/m \
 	-H 'Content-Type: application/json' \
 	-d '{
             "grunt_id": "GRUNT_ID",

@@ -28,10 +28,11 @@ BonFire C2 is a local educational dashboard for managing listeners, connected gr
 ### API Summary
 
 - `GET /api/health` returns the health status.
-- `GET /api/listeners` and `POST /api/listeners` manage listeners.
-- `GET /api/grunts` lists connected grunts.
-- `GET /api/messages` and `GET /api/messages/grunt?grunt_id=...` return message history.
+- `GET /api/notifications` and `GET /api/messages` return dashboard feeds.
+- `GET /api/listeners`, `POST /api/listeners`, `GET /api/listeners/l?listener_id=...`, `POST /api/listeners/l/start?id=...`, and `POST /api/listeners/l/stop?id=...` manage listeners.
+- `GET /api/grunts`, `GET /api/grunts/g?grunt_id=...`, `GET /api/grunts/g/messages?grunt_id=...`, and `POST /api/grunts/g/messages/m` return and write grunt data.
 - `GET /api/tasks` and `POST /api/tasks` manage scheduled tasks.
+- `GET /api/notifications` returns recent notifications.
 
 ### Curl Examples
 
@@ -39,6 +40,8 @@ Use `http://localhost:8080` as the base URL if you are running the server with t
 
 ```bash
 curl -L http://localhost:8080/api/health
+curl -L http://localhost:8080/api/notifications
+curl -L http://localhost:8080/api/messages
 curl -L http://localhost:8080/api/listeners
 curl -L http://localhost:8080/api/grunts
 curl -L http://localhost:8080/api/tasks

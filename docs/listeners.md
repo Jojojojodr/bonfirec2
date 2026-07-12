@@ -21,6 +21,9 @@ The server keeps listener state in memory and in the database. On startup it rel
 
 - `GET /api/listeners` lists all listeners.
 - `POST /api/listeners` creates a listener.
+- `GET /api/listeners/l/?listener_id=...` returns one listener by ID.
+- `POST /api/listeners/l/start?id=...` starts a listener by ID.
+- `POST /api/listeners/l/stop?id=...` stops a listener by ID.
 - `POST /actions/new-listener` creates a listener from the web UI.
 - `POST /actions/start-listener?id=...` starts a listener.
 - `POST /actions/stop-listener?id=...` stops a listener.
@@ -43,6 +46,19 @@ curl -X POST http://localhost:8080/api/listeners \
             "port":"7777",
             "protocol":"tcp"
         }'
+```
+
+Get a single listener by ID:
+
+```bash
+curl -L 'http://localhost:8080/api/listeners/l?listener_id=LISTENER_ID'
+```
+
+Start or stop an existing listener through the API routes:
+
+```bash
+curl -X POST 'http://localhost:8080/api/listeners/l/start?id=LISTENER_ID'
+curl -X POST 'http://localhost:8080/api/listeners/l/stop?id=LISTENER_ID'
 ```
 
 Start or stop an existing listener from the action routes:
