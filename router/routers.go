@@ -29,6 +29,7 @@ func SetupApiRouter(router *gin.Engine) *gin.Engine {
 	api.GET("/notifications", controller.GetNotifications)
 	api.GET("/messages", controller.GetLatestMessages)
 	api.GET("/logs", controller.GetEventLogs)
+	api.POST("/logs/export", controller.ExportEventLogs)
 
 	tasks := api.Group("/tasks")
 	tasks.GET("/", controller.GetTasks)
@@ -39,7 +40,7 @@ func SetupApiRouter(router *gin.Engine) *gin.Engine {
 
 	grunt := grunts.Group("/g")
 	grunt.GET("/", controller.GetGruntById)
-	
+
 	messages := grunt.Group("/messages")
 	messages.GET("/", controller.GetGruntMessages)
 	messages.POST("/m", controller.SendGruntMessage)
@@ -62,6 +63,7 @@ func SetupActionRouter(router *gin.Engine) *gin.Engine {
 	action.POST("/start-listener", controller.StartListener)
 	action.POST("/stop-listener", controller.StopListener)
 	action.POST("/grunts/terminal/command", controller.SendGruntCommand)
+	action.POST("/export-logs", controller.ExportLogs)
 
 	partials := action.Group("/partials")
 	partials.GET("/dashboard/active-grunts", controller.DashboardActiveGruntsPartial)

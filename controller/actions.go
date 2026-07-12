@@ -107,3 +107,22 @@ func SendGruntCommand(c *gin.Context) {
 
 	c.Status(http.StatusNoContent)
 }
+
+func ExportLogs(c *gin.Context) {
+	format := strings.ToLower(strings.TrimSpace(c.Query("format")))
+	if format == "" {
+		format = "txt"
+	}
+
+	if _, err := bonfirec2.ExportEventLogs(format); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	redirectTarget := c.GetHeader("Referer")
+	if redirectTarget == "" {
+		redirectTarget = "/"
+	}
+
+	c.Redirect(http.StatusSeeOther, redirectTarget)
+}

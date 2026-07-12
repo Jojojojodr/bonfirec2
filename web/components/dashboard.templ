@@ -29,9 +29,16 @@ templ DashboardHero() {
                     Start listener
                 </button>
             </form>
-            <button type="button" class="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
-                Open grunt list
-            </button>
+            <form action="/actions/export-logs?format=txt" method="POST">
+                <button type="submit" class="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+                    Export logs (.txt)
+                </button>
+            </form>
+            <form action="/actions/export-logs?format=json" method="POST">
+                <button type="submit" class="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
+                    Export logs (.json)
+                </button>
+            </form> 
         </div>
     </div>
 }

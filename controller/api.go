@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Jojojojodr/bonfirec2"
@@ -20,16 +21,16 @@ func GetHealth(c *gin.Context) {
 
 func GetListeners(c *gin.Context) {
 	type listenerResponse struct {
-		ID       string `json:"id"`
-		Port     string `json:"port"`
-		Status   string `json:"status"`
+		ID     string `json:"id"`
+		Port   string `json:"port"`
+		Status string `json:"status"`
 	}
 	listeners := make([]*listenerResponse, 0, len(bonfirec2.Listeners))
 	for _, listener := range bonfirec2.Listeners {
 		resp := &listenerResponse{
-			ID:       listener.ID,
-			Port:     listener.Port,
-			Status:   listener.Status,
+			ID:     listener.ID,
+			Port:   listener.Port,
+			Status: listener.Status,
 		}
 
 		listeners = append(listeners, resp)
@@ -217,7 +218,6 @@ func CreateTask(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"task": task})
 }
 
-
 func GetNotifications(c *gin.Context) {
 	limit := 20
 	if rawLimit := c.Query("limit"); rawLimit != "" {
@@ -261,4 +261,23 @@ func GetEventLogs(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"logs": logs})
+}
+
+func ExportEventLogs(c *gin.Context) {
+	format := strings.ToLower(strings.TrimSpace(c.Query("format")))
+	if format == "" {
+		format = "txt"
+	}
+
+	filePath, err := bonfirec2.ExportEventLogs(format)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message":   "logs exported",
+		"format":    format,
+		"file_path": filePath,
+	})
 }

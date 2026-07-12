@@ -1,8 +1,11 @@
 package bonfirec2
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -24,16 +27,16 @@ func GetEventLogs(limit int, gruntID, taskID string) ([]*EventLog, error) {
 	if Data == nil {
 		return nil, nil
 	}
-	
+
 	db := Data.GetDB()
 	if db == nil {
 		return nil, nil
 	}
-	
+
 	if limit <= 0 || limit > 200 {
 		limit = 50
 	}
-	
+
 	query := db.Model(&EventLog{})
 	if strings.TrimSpace(gruntID) != "" {
 		query = query.Where("grunt_id = ?", strings.TrimSpace(gruntID))
@@ -41,14 +44,78 @@ func GetEventLogs(limit int, gruntID, taskID string) ([]*EventLog, error) {
 	if strings.TrimSpace(taskID) != "" {
 		query = query.Where("task_id = ?", strings.TrimSpace(taskID))
 	}
-	
+
 	var logs []*EventLog
 	if err := query.Order("created_at DESC").Limit(limit).Find(&logs).Error; err != nil {
 		log.Printf("Failed to retrieve event logs from database: %v", err)
 		return nil, err
 	}
-	
+
 	return logs, nil
+}
+
+func ExportEventLogs(format string) (string, error) {
+	if Data == nil {
+		return "", fmt.Errorf("database is not initialized")
+	}
+
+	db := Data.GetDB()
+	if db == nil {
+		return "", fmt.Errorf("database connection is not available")
+	}
+
+	fileFormat := strings.ToLower(strings.TrimSpace(format))
+	if fileFormat == "" {
+		fileFormat = "txt"
+	}
+	if fileFormat != "txt" && fileFormat != "json" {
+		return "", fmt.Errorf("unsupported format %q, use txt or json", fileFormat)
+	}
+
+	var logs []*EventLog
+	if err := db.Order("created_at ASC").Find(&logs).Error; err != nil {
+		return "", err
+	}
+
+	outputDir := "data"
+	if err := os.MkdirAll(outputDir, 0o755); err != nil {
+		return "", err
+	}
+
+	filename := fmt.Sprintf("bfc2-logs.%s", fileFormat)
+	outputPath := filepath.Join(outputDir, filename)
+
+	switch fileFormat {
+	case "json":
+		payload, err := json.MarshalIndent(logs, "", "  ")
+		if err != nil {
+			return "", err
+		}
+		if err := os.WriteFile(outputPath, append(payload, '\n'), 0o644); err != nil {
+			return "", err
+		}
+	default:
+		var builder strings.Builder
+		for _, entry := range logs {
+			line := fmt.Sprintf("[%s] [%s] %s | %s", entry.CreatedAt, entry.Severity, entry.EventType, entry.Message)
+			if entry.ListenerID != "" {
+				line += fmt.Sprintf(" | listener_id=%s", entry.ListenerID)
+			}
+			if entry.GruntID != "" {
+				line += fmt.Sprintf(" | grunt_id=%s", entry.GruntID)
+			}
+			if entry.TaskID != "" {
+				line += fmt.Sprintf(" | task_id=%s", entry.TaskID)
+			}
+			builder.WriteString(line)
+			builder.WriteByte('\n')
+		}
+		if err := os.WriteFile(outputPath, []byte(builder.String()), 0o644); err != nil {
+			return "", err
+		}
+	}
+
+	return outputPath, nil
 }
 
 func LogGruntConnected(gruntID, listenerID, address string) error {
@@ -67,7 +134,7 @@ func LogGruntDisconnected(gruntID, listenerID, address, reason string) error {
 	if reason == "" {
 		reason = "connection closed"
 	}
-	
+
 	return logEvent(
 		"grunt_disconnected",
 		"warning",
@@ -83,7 +150,7 @@ func LogGruntMessageSent(listenerID, gruntID, content string) error {
 	if len(trimmed) > 160 {
 		trimmed = trimmed[:160] + "..."
 	}
-	
+
 	return logEvent(
 		"grunt_message_sent",
 		"info",
@@ -114,12 +181,12 @@ func LogTaskDispatched(task *Task) error {
 	if task == nil {
 		return nil
 	}
-	
+
 	level := "info"
 	if task.Status == "completed" {
 		level = "success"
 	}
-	
+
 	return logEvent(
 		"task_dispatched",
 		level,
@@ -134,7 +201,7 @@ func LogTaskWaiting(task *Task, reason string) error {
 	if task == nil {
 		return nil
 	}
-	
+
 	return logEvent(
 		"task_waiting",
 		"warning",

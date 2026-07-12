@@ -35,7 +35,7 @@ func DashboardHero() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between\"><div class=\"space-y-2\"><div class=\"inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-200 shadow-lg shadow-emerald-950/20 backdrop-blur\"><span class=\"h-2 w-2 rounded-full bg-emerald-300\"></span> Command and control dashboard</div><div><h1 class=\"mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl\">Active listeners and grunts</h1><p class=\"mt-3 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg\">Monitor live listeners, check grunt health, and triage activity from a single operational view.</p></div></div><div class=\"flex flex-wrap gap-3\"><form action=\"/actions/new-listener\" method=\"POST\"><button type=\"submit\" class=\"inline-flex items-center justify-center rounded-full bg-emerald-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300\">Start listener</button></form><button type=\"button\" class=\"inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10\">Open grunt list</button></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between\"><div class=\"space-y-2\"><div class=\"inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-200 shadow-lg shadow-emerald-950/20 backdrop-blur\"><span class=\"h-2 w-2 rounded-full bg-emerald-300\"></span> Command and control dashboard</div><div><h1 class=\"mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl\">Active listeners and grunts</h1><p class=\"mt-3 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg\">Monitor live listeners, check grunt health, and triage activity from a single operational view.</p></div></div><div class=\"flex flex-wrap gap-3\"><form action=\"/actions/new-listener\" method=\"POST\"><button type=\"submit\" class=\"inline-flex items-center justify-center rounded-full bg-emerald-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300\">Start listener</button></form><form action=\"/actions/export-logs?format=txt\" method=\"POST\"><button type=\"submit\" class=\"inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10\">Export logs (.txt)</button></form><form action=\"/actions/export-logs?format=json\" method=\"POST\"><button type=\"submit\" class=\"inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10\">Export logs (.json)</button></form></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -169,7 +169,7 @@ func ActiveGruntsPanelBody() templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d online", len(bonfirec2.GetActiveGrunts())))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 64, Col: 174}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 71, Col: 174}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -228,7 +228,7 @@ func statCard(label string, value string, badge string, badgeStyle string) templ
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 82, Col: 48}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 89, Col: 48}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -241,7 +241,7 @@ func statCard(label string, value string, badge string, badgeStyle string) templ
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(value)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 84, Col: 78}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 91, Col: 78}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -276,7 +276,7 @@ func statCard(label string, value string, badge string, badgeStyle string) templ
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(badge)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 85, Col: 45}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 92, Col: 45}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -355,7 +355,7 @@ func queueRow(orderID string, location string, stage string, eta string, etaStyl
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(orderID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 101, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 108, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
@@ -368,7 +368,7 @@ func queueRow(orderID string, location string, stage string, eta string, etaStyl
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(location)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 102, Col: 60}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 109, Col: 60}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
@@ -381,7 +381,7 @@ func queueRow(orderID string, location string, stage string, eta string, etaStyl
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(stage)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 104, Col: 48}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 111, Col: 48}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -416,7 +416,7 @@ func queueRow(orderID string, location string, stage string, eta string, etaStyl
 		var templ_7745c5c3_Var19 string
 		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(eta)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 105, Col: 34}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 112, Col: 34}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 		if templ_7745c5c3_Err != nil {
@@ -582,7 +582,7 @@ func activityRow(message string, timestamp string, timestampStyle string) templ.
 		var templ_7745c5c3_Var24 string
 		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 172, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 179, Col: 22}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 		if templ_7745c5c3_Err != nil {
@@ -617,7 +617,7 @@ func activityRow(message string, timestamp string, timestampStyle string) templ.
 		var templ_7745c5c3_Var27 string
 		templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(timestamp)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 173, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/dashboard.templ`, Line: 180, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 		if templ_7745c5c3_Err != nil {
