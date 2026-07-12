@@ -50,6 +50,7 @@ func (d *Database) Connect() error {
 		&Listener{},
 		&Grunt{},
 		&Task{},
+		&EventLog{},
 		&models.Message{},
 	)
 	if err != nil {

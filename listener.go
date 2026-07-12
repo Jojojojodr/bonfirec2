@@ -185,6 +185,9 @@ func (l *Listener) handleConnection(conn net.Conn) {
 	gruntConnectionsMu.Unlock()
 
 	log.Printf("Accepted connection from %s (grunt: %s)", remoteAddr, id)
+	if err := LogGruntConnected(id, l.ID, remoteAddr); err != nil {
+		log.Printf("Failed to save grunt connection log for %s: %v", id, err)
+	}
 	NotifyGruntConnected(id, l.ID, remoteAddr)
 
 	buf := make([]byte, 2048)
@@ -211,6 +214,9 @@ func (l *Listener) handleConnection(conn net.Conn) {
 			gruntConnectionsMu.Lock()
 			delete(gruntConnections, id)
 			gruntConnectionsMu.Unlock()
+			if err := LogGruntDisconnected(id, l.ID, remoteAddr, reason); err != nil {
+				log.Printf("Failed to save grunt disconnection log for %s: %v", id, err)
+			}
 			NotifyGruntDisconnected(id, l.ID, remoteAddr, reason)
 			return
 		}
@@ -267,6 +273,13 @@ func SendCommandToGrunt(gruntID, command string) error {
 	}
 
 	_, err := conn.Write([]byte(command + "\n"))
+	if err == nil {
+		if grunt := Grunts[gruntID]; grunt != nil {
+			if logErr := LogGruntMessageSent(grunt.ListenerID, gruntID, command); logErr != nil {
+				log.Printf("Failed to save grunt message send log for %s: %v", gruntID, logErr)
+			}
+		}
+	}
 	return err
 }
 

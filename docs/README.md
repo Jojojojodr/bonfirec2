@@ -32,6 +32,7 @@ BonFire C2 is a local educational dashboard for managing listeners, connected gr
 - `GET /api/listeners`, `POST /api/listeners`, `GET /api/listeners/l?listener_id=...`, `POST /api/listeners/l/start?id=...`, and `POST /api/listeners/l/stop?id=...` manage listeners.
 - `GET /api/grunts`, `GET /api/grunts/g?grunt_id=...`, `GET /api/grunts/g/messages?grunt_id=...`, and `POST /api/grunts/g/messages/m` return and write grunt data.
 - `GET /api/tasks` and `POST /api/tasks` manage scheduled tasks.
+- `GET /api/logs?limit=...&grunt_id=...&task_id=...` returns recent persisted event logs.
 - `GET /api/notifications` returns recent notifications.
 
 ### Curl Examples

@@ -238,3 +238,27 @@ func GetNotifications(c *gin.Context) {
 	notifications := bonfirec2.Notifications.Latest(limit)
 	c.JSON(http.StatusOK, gin.H{"notifications": notifications})
 }
+
+func GetEventLogs(c *gin.Context) {
+	limit := 50
+	if rawLimit := c.Query("limit"); rawLimit != "" {
+		parsedLimit, err := strconv.Atoi(rawLimit)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "limit must be an integer"})
+			return
+		}
+		if parsedLimit > 0 {
+			limit = parsedLimit
+		}
+	}
+
+	gruntID := c.Query("grunt_id")
+	taskID := c.Query("task_id")
+	logs, err := bonfirec2.GetEventLogs(limit, gruntID, taskID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"logs": logs})
+}

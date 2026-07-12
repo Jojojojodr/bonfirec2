@@ -28,6 +28,7 @@ func SetupApiRouter(router *gin.Engine) *gin.Engine {
 	api.GET("/health", controller.GetHealth)
 	api.GET("/notifications", controller.GetNotifications)
 	api.GET("/messages", controller.GetLatestMessages)
+	api.GET("/logs", controller.GetEventLogs)
 
 	tasks := api.Group("/tasks")
 	tasks.GET("/", controller.GetTasks)

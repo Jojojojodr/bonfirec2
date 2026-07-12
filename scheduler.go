@@ -94,6 +94,9 @@ func (s *TaskScheduler) dispatchTask(task *Task) {
 	grunt := Grunts[task.GruntID]
 	if grunt == nil {
 		task.markRetry("grunt not connected")
+		if err := LogTaskWaiting(task, "grunt not connected"); err != nil {
+			log.Printf("failed to save task %s waiting log: %v", task.ID, err)
+		}
 		NotifyTaskWaiting(task, "grunt not connected")
 		if err := s.db.Save(task).Error; err != nil {
 			log.Printf("failed to update task %s while waiting for grunt: %v", task.ID, err)
@@ -103,6 +106,9 @@ func (s *TaskScheduler) dispatchTask(task *Task) {
 	
 	if err := SendCommandToGrunt(task.GruntID, task.Command); err != nil {
 		task.markRetry(err.Error())
+		if logErr := LogTaskWaiting(task, err.Error()); logErr != nil {
+			log.Printf("failed to save task %s retry log: %v", task.ID, logErr)
+		}
 		NotifyTaskWaiting(task, err.Error())
 		if err := s.db.Save(task).Error; err != nil {
 			log.Printf("failed to mark task %s for retry: %v", task.ID, err)
@@ -115,6 +121,9 @@ func (s *TaskScheduler) dispatchTask(task *Task) {
 	}
 	
 	task.markDispatched()
+	if err := LogTaskDispatched(task); err != nil {
+		log.Printf("failed to save task %s dispatch log: %v", task.ID, err)
+	}
 	NotifyTaskDispatched(task)
 	if err := s.db.Save(task).Error; err != nil {
 		log.Printf("failed to persist task %s dispatch state: %v", task.ID, err)
