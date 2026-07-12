@@ -4,6 +4,14 @@ The sample client connects back to the server and executes commands it receives 
 
 ## Running The Client
 
+Download the latest client package for your platform:
+
+```bash
+curl -fsSL http://localhost:8080/static/scripts/download.py | python3
+```
+
+The script fetches the latest client release archive from GitHub and extracts it into the current directory.
+
 Start the client with the task runner:
 
 ```bash

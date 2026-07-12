@@ -76,3 +76,4 @@ curl -X POST http://localhost:8080/api/tasks \
 
 - The app is intended for local use only.
 - The sample client defaults to connecting to `localhost` on port `7777`.
+- Download the latest client package with `curl -fsSL http://localhost:8080/static/scripts/download.py | python3`.
