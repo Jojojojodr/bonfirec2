@@ -67,6 +67,24 @@ func CreateListener(c *gin.Context) {
 	})
 }
 
+func GetListenerById(c *gin.Context) {
+	listenerID := c.Query("listener_id")
+	if listenerID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "listener_id query parameter is required"})
+		return
+	}
+
+	listener := bonfirec2.Listeners[listenerID]
+	if listener == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "listener not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"listener": listener,
+	})
+}
+
 func GetGrunts(c *gin.Context) {
 	grunts := make([]*bonfirec2.Grunt, 0, len(bonfirec2.Grunts))
 	for _, grunt := range bonfirec2.Grunts {
@@ -75,6 +93,24 @@ func GetGrunts(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"grunts": grunts,
+	})
+}
+
+func GetGruntById(c *gin.Context) {
+	gruntID := c.Query("grunt_id")
+	if gruntID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "grunt_id query parameter is required"})
+		return
+	}
+
+	grunt := bonfirec2.Grunts[gruntID]
+	if grunt == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "grunt not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"grunt": grunt,
 	})
 }
 
