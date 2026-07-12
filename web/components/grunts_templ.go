@@ -194,64 +194,90 @@ func GruntView(grunt *bonfirec2.Grunt) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</p></div></div><div class=\"flex flex-col gap-2 sm:col-span-2 xl:col-span-3\"><span class=\"text-sm font-semibold text-slate-300\">Terminal:</span><div class=\"overflow-hidden rounded-2xl border border-emerald-500/35 bg-black/85 shadow-inner shadow-emerald-950/40\"><div class=\"flex items-center justify-between border-b border-emerald-500/25 bg-emerald-950/30 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-300\"><span>BonFire C2 shell</span> <span class=\"inline-flex items-center gap-2 text-emerald-200\"><span class=\"h-2 w-2 rounded-full bg-emerald-300\"></span> live</span></div><div id=\"grunt-terminal-output\" class=\"max-h-[22rem] min-h-[16rem] overflow-y-auto p-4 font-mono text-sm leading-6\" hx-get=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</p></div></div><div class=\"flex flex-col gap-2 sm:col-span-2 xl:col-span-3\"><span class=\"text-sm font-semibold text-slate-300\">Terminal:</span><div class=\"overflow-hidden rounded-2xl border border-emerald-500/35 bg-black/85 shadow-inner shadow-emerald-950/40\"><div class=\"flex items-center justify-between border-b border-emerald-500/25 bg-emerald-950/30 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-300\"><span>BonFire C2 shell</span> <span class=\"inline-flex items-center gap-2 text-emerald-200\"><span class=\"h-2 w-2 rounded-full bg-emerald-300\"></span> live</span></div><div id=\"grunt-terminal-output\" class=\"max-h-[22rem] min-h-[16rem] overflow-y-auto p-4 font-mono text-sm leading-6\" data-grunt-id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var10 string
-		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue("/actions/partials/grunts/terminal/messages?id=" + grunt.ID)
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(grunt.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 113, Col: 92}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 113, Col: 48}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" hx-trigger=\"load, every 2s\" hx-swap=\"innerHTML\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = GruntTerminalMessages(grunt).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><form class=\"border-t border-emerald-500/25 bg-slate-950/70 p-3\" hx-post=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "\" data-has-older=\"true\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue("/actions/grunts/terminal/command?id=" + grunt.ID)
+		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue("/actions/partials/grunts/terminal/messages?id=" + grunt.ID + "&limit=100")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 121, Col: 83}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 115, Col: 107}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\" hx-target=\"#grunt-terminal-output\" hx-swap=\"innerHTML\" hx-on:htmx:after-request=\"this.reset()\"><div class=\"flex items-center gap-3\"><span class=\"font-mono text-emerald-300\">operator@bonfire:~$</span> <input name=\"command\" type=\"text\" list=\"grunt-command-suggestions\" autocomplete=\"off\" placeholder=\"run command\" class=\"w-full rounded-lg border border-emerald-500/30 bg-black/70 px-3 py-2 font-mono text-sm text-emerald-100 outline-none ring-0 placeholder:text-emerald-700 focus:border-emerald-400\"> <datalist id=\"grunt-command-suggestions\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\" hx-trigger=\"load\" hx-swap=\"innerHTML\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = GruntTerminalMessages(grunt, 100, "", "").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div><div id=\"grunt-terminal-live-poll\" hx-get=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var12 string
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue("/actions/partials/grunts/terminal/messages?id=" + grunt.ID + "&limit=100")
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 123, Col: 107}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "\" hx-trigger=\"every 2s\" hx-target=\"#grunt-terminal-output\" hx-swap=\"beforeend\" hx-vals='js:{after: document.getElementById(\"grunt-terminal-output\")?.dataset.latestCreatedAt || \"\"}'></div><form class=\"border-t border-emerald-500/25 bg-slate-950/70 p-3\" hx-post=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var13 string
+		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue("/actions/grunts/terminal/command?id=" + grunt.ID)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 131, Col: 83}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\" hx-target=\"#grunt-terminal-output\" hx-swap=\"innerHTML\" hx-on:htmx:after-request=\"this.reset()\"><div class=\"flex items-center gap-3\"><span class=\"font-mono text-emerald-300\">operator@bonfire:~$</span> <input name=\"command\" type=\"text\" list=\"grunt-command-suggestions\" autocomplete=\"off\" placeholder=\"run command\" class=\"w-full rounded-lg border border-emerald-500/30 bg-black/70 px-3 py-2 font-mono text-sm text-emerald-100 outline-none ring-0 placeholder:text-emerald-700 focus:border-emerald-400\"> <datalist id=\"grunt-command-suggestions\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, command := range commands.ListSlashCommands() {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<option value=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<option value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var12 string
-			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(command)
+			var templ_7745c5c3_Var14 string
+			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(command)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 137, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 147, Col: 59}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\"></option>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\"></option>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</datalist> <button type=\"submit\" class=\"rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-500/30\">send</button></div></form></div></div></div></div><script>\n        (() => {\n            const scrollTerminalToBottom = () => {\n                const terminal = document.getElementById(\"grunt-terminal-output\")\n                if (!terminal) {\n                    return\n                }\n\n                terminal.scrollTop = terminal.scrollHeight\n            }\n\n            if (document.readyState === \"loading\") {\n                document.addEventListener(\"DOMContentLoaded\", scrollTerminalToBottom, { once: true })\n            } else {\n                scrollTerminalToBottom()\n            }\n\n            if (!window.__gruntTerminalAutoScrollBound) {\n                window.__gruntTerminalAutoScrollBound = true\n                document.body.addEventListener(\"htmx:afterSwap\", (event) => {\n                    const target = event.target\n                    if (!target || target.id !== \"grunt-terminal-output\") {\n                        return\n                    }\n\n                    target.scrollTop = target.scrollHeight\n                })\n            }\n        })()\n    </script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</datalist> <button type=\"submit\" class=\"rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-200 transition hover:bg-emerald-500/30\">send</button></div></form></div></div></div></div><script>\n        (() => {\n            const syncTerminalState = (terminal) => {\n                if (!terminal) {\n                    return\n                }\n\n                const messages = terminal.querySelectorAll(\"[data-message-created-at]\")\n                if (messages.length > 0) {\n                    const first = messages[0]\n                    const last = messages[messages.length - 1]\n                    terminal.dataset.oldestCreatedAt = first.getAttribute(\"data-message-created-at\") || terminal.dataset.oldestCreatedAt || \"\"\n                    terminal.dataset.latestCreatedAt = last.getAttribute(\"data-message-created-at\") || terminal.dataset.latestCreatedAt || \"\"\n\n                    const emptyMarker = terminal.querySelector(\"[data-terminal-empty]\")\n                    if (emptyMarker) {\n                        emptyMarker.remove()\n                    }\n                }\n            }\n\n            const scrollTerminalToBottom = () => {\n                const terminal = document.getElementById(\"grunt-terminal-output\")\n                if (!terminal) {\n                    return\n                }\n\n                terminal.scrollTop = terminal.scrollHeight\n            }\n\n            const loadOlderMessages = async (terminal) => {\n                if (!terminal || terminal.dataset.loadingOlder === \"true\" || terminal.dataset.hasOlder === \"false\") {\n                    return\n                }\n\n                const before = terminal.dataset.oldestCreatedAt || \"\"\n                if (!before) {\n                    terminal.dataset.hasOlder = \"false\"\n                    return\n                }\n\n                terminal.dataset.loadingOlder = \"true\"\n                const previousHeight = terminal.scrollHeight\n\n                try {\n                    const response = await fetch(`/actions/partials/grunts/terminal/messages?id=${encodeURIComponent(terminal.dataset.gruntId)}&limit=100&before=${encodeURIComponent(before)}`)\n                    if (!response.ok) {\n                        return\n                    }\n\n                    const html = await response.text()\n                    if (!html.trim()) {\n                        terminal.dataset.hasOlder = \"false\"\n                        return\n                    }\n\n                    const wrapper = document.createElement(\"div\")\n                    wrapper.innerHTML = html\n\n                    const nodes = Array.from(wrapper.childNodes)\n                    terminal.prepend(...nodes)\n\n                    const heightDelta = terminal.scrollHeight - previousHeight\n                    terminal.scrollTop += heightDelta\n\n                    const hasLoadHint = wrapper.querySelector(\"[data-terminal-load-more]\")\n                    if (!hasLoadHint) {\n                        terminal.dataset.hasOlder = \"false\"\n                    }\n\n                    syncTerminalState(terminal)\n                } finally {\n                    terminal.dataset.loadingOlder = \"false\"\n                }\n            }\n\n            if (document.readyState === \"loading\") {\n                document.addEventListener(\"DOMContentLoaded\", scrollTerminalToBottom, { once: true })\n            } else {\n                scrollTerminalToBottom()\n            }\n\n            if (!window.__gruntTerminalAutoScrollBound) {\n                window.__gruntTerminalAutoScrollBound = true\n                document.body.addEventListener(\"htmx:afterSwap\", (event) => {\n                    const target = event.target\n                    if (!target || target.id !== \"grunt-terminal-output\") {\n                        return\n                    }\n\n                    const previousLatest = target.dataset.latestCreatedAt || \"\"\n                    syncTerminalState(target)\n                    const nextLatest = target.dataset.latestCreatedAt || \"\"\n                    const hasInitialMessages = previousLatest === \"\" && nextLatest !== \"\"\n                    const hasNewMessages = previousLatest !== \"\" && previousLatest !== nextLatest\n\n                    if (hasInitialMessages || hasNewMessages) {\n                        target.scrollTop = target.scrollHeight\n                    }\n\n                    if (!target.__gruntScrollBound) {\n                        target.__gruntScrollBound = true\n                        target.addEventListener(\"scroll\", () => {\n                            if (target.scrollTop <= 24) {\n                                loadOlderMessages(target)\n                            }\n                        })\n                    }\n                })\n            }\n        })()\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -259,7 +285,7 @@ func GruntView(grunt *bonfirec2.Grunt) templ.Component {
 	})
 }
 
-func GruntTerminalMessages(grunt *bonfirec2.Grunt) templ.Component {
+func GruntTerminalMessages(grunt *bonfirec2.Grunt, limit int, before string, after string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -275,59 +301,97 @@ func GruntTerminalMessages(grunt *bonfirec2.Grunt) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var13 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var13 == nil {
-			templ_7745c5c3_Var13 = templ.NopComponent
+		templ_7745c5c3_Var15 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var15 == nil {
+			templ_7745c5c3_Var15 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		if messages, err := grunt.GetMessages(); err == nil {
-			if len(messages) == 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<div class=\"text-emerald-700\">No output yet.</div>")
+		if page, err := grunt.GetMessagesPage(limit, before, after); err == nil {
+			if page.HasOlder {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"mb-3 text-center text-xs text-slate-500\" data-terminal-load-more=\"true\">Scroll up to load older messages</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			for _, message := range messages {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, " ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if len(page.Messages) == 0 {
+				if before == "" && after == "" {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<div class=\"text-emerald-700\" data-terminal-empty=\"true\">No output yet.</div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+			}
+			for _, message := range page.Messages {
 				if message.IsServerMessage {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "<div class=\"whitespace-pre-wrap break-words text-cyan-300\">operator> ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<div class=\"whitespace-pre-wrap break-words text-cyan-300\" data-message-created-at=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					var templ_7745c5c3_Var14 string
-					templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(message.Content)
+					var templ_7745c5c3_Var16 string
+					templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue(message.CreatedAt)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 191, Col: 101}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 288, Col: 118}
 					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</div>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\">operator> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var17 string
+					templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(message.Content)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 288, Col: 147}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</div>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				} else {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"whitespace-pre-wrap break-words text-emerald-200\">grunt> ")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<div class=\"whitespace-pre-wrap break-words text-emerald-200\" data-message-created-at=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					var templ_7745c5c3_Var15 string
-					templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(message.Content)
+					var templ_7745c5c3_Var18 string
+					templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue(message.CreatedAt)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 193, Col: 101}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 290, Col: 121}
 					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\">grunt> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var19 string
+					templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(message.Content)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 290, Col: 147}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</div>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<div class=\"text-red-300\">Failed to load terminal output.</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div class=\"text-red-300\">Failed to load terminal output.</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -352,79 +416,79 @@ func gruntRow(grunt *bonfirec2.Grunt) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var16 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var16 == nil {
-			templ_7745c5c3_Var16 = templ.NopComponent
+		templ_7745c5c3_Var20 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var20 == nil {
+			templ_7745c5c3_Var20 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = templ.RenderScriptItems(ctx, templ_7745c5c3_Buffer, directToGruntDetail(grunt.ID))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<tr class=\"border-b border-slate-700/45 bg-slate-950/30 hover:bg-slate-900/45\" hover:class=\"bg-slate-900/45 cursor-pointer\" role=\"link\" tabindex=\"0\" onclick=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<tr class=\"border-b border-slate-700/45 bg-slate-950/30 hover:bg-slate-900/45\" hover:class=\"bg-slate-900/45 cursor-pointer\" role=\"link\" tabindex=\"0\" onclick=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var17 templ.ComponentScript = directToGruntDetail(grunt.ID)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17.Call)
+		var templ_7745c5c3_Var21 templ.ComponentScript = directToGruntDetail(grunt.ID)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var21.Call)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\"><td class=\"px-4 py-2 text-sm text-slate-200\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "\"><td class=\"px-4 py-2 text-sm text-slate-200\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var18 string
-		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ID)
+		var templ_7745c5c3_Var22 string
+		templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ID)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 207, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 304, Col: 62}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</td><td class=\"px-4 py-2 text-sm text-slate-200\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var19 string
-		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ListenerID)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 208, Col: 70}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</td><td class=\"px-4 py-2 text-sm text-slate-200\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</td><td class=\"px-4 py-2 text-sm\">")
+		var templ_7745c5c3_Var23 string
+		templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.ListenerID)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 305, Col: 70}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</td><td class=\"px-4 py-2 text-sm\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if grunt.Status == "Active" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<span class=\"inline-flex items-center gap-2 rounded-full bg-green-400/20 px-3 py-1 text-xs font-medium text-green-300\"><span class=\"h-2 w-2 rounded-full bg-green-300\"></span> Active</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<span class=\"inline-flex items-center gap-2 rounded-full bg-green-400/20 px-3 py-1 text-xs font-medium text-green-300\"><span class=\"h-2 w-2 rounded-full bg-green-300\"></span> Active</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<span class=\"inline-flex items-center gap-2 rounded-full bg-red-400/20 px-3 py-1 text-xs font-medium text-red-300\"><span class=\"h-2 w-2 rounded-full bg-red-300\"></span> Inactive</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<span class=\"inline-flex items-center gap-2 rounded-full bg-red-400/20 px-3 py-1 text-xs font-medium text-red-300\"><span class=\"h-2 w-2 rounded-full bg-red-300\"></span> Inactive</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</td><td class=\"px-4 py-2 text-sm text-slate-200\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "</td><td class=\"px-4 py-2 text-sm text-slate-200\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var20 string
-		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.LastCheckIn)
+		var templ_7745c5c3_Var24 string
+		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(grunt.LastCheckIn)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 222, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/components/grunts.templ`, Line: 319, Col: 71}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "</td></tr>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "</td></tr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

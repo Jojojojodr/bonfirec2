@@ -110,11 +110,21 @@ templ GruntView(grunt *bonfirec2.Grunt) {
                     <div
                         id="grunt-terminal-output"
                         class="max-h-[22rem] min-h-[16rem] overflow-y-auto p-4 font-mono text-sm leading-6"
-                        hx-get={ "/actions/partials/grunts/terminal/messages?id=" + grunt.ID }
-                        hx-trigger="load, every 2s"
+                        data-grunt-id={ grunt.ID }
+                        data-has-older="true"
+                        hx-get={ "/actions/partials/grunts/terminal/messages?id=" + grunt.ID + "&limit=100" }
+                        hx-trigger="load"
                         hx-swap="innerHTML">
-                        @GruntTerminalMessages(grunt)
+                        @GruntTerminalMessages(grunt, 100, "", "")
                     </div>
+
+                    <div
+                        id="grunt-terminal-live-poll"
+                        hx-get={ "/actions/partials/grunts/terminal/messages?id=" + grunt.ID + "&limit=100" }
+                        hx-trigger="every 2s"
+                        hx-target="#grunt-terminal-output"
+                        hx-swap="beforeend"
+                        hx-vals='js:{after: document.getElementById("grunt-terminal-output")?.dataset.latestCreatedAt || ""}'></div>
 
                     <form
                         class="border-t border-emerald-500/25 bg-slate-950/70 p-3"
@@ -151,6 +161,25 @@ templ GruntView(grunt *bonfirec2.Grunt) {
 
     <script>
         (() => {
+            const syncTerminalState = (terminal) => {
+                if (!terminal) {
+                    return
+                }
+
+                const messages = terminal.querySelectorAll("[data-message-created-at]")
+                if (messages.length > 0) {
+                    const first = messages[0]
+                    const last = messages[messages.length - 1]
+                    terminal.dataset.oldestCreatedAt = first.getAttribute("data-message-created-at") || terminal.dataset.oldestCreatedAt || ""
+                    terminal.dataset.latestCreatedAt = last.getAttribute("data-message-created-at") || terminal.dataset.latestCreatedAt || ""
+
+                    const emptyMarker = terminal.querySelector("[data-terminal-empty]")
+                    if (emptyMarker) {
+                        emptyMarker.remove()
+                    }
+                }
+            }
+
             const scrollTerminalToBottom = () => {
                 const terminal = document.getElementById("grunt-terminal-output")
                 if (!terminal) {
@@ -158,6 +187,52 @@ templ GruntView(grunt *bonfirec2.Grunt) {
                 }
 
                 terminal.scrollTop = terminal.scrollHeight
+            }
+
+            const loadOlderMessages = async (terminal) => {
+                if (!terminal || terminal.dataset.loadingOlder === "true" || terminal.dataset.hasOlder === "false") {
+                    return
+                }
+
+                const before = terminal.dataset.oldestCreatedAt || ""
+                if (!before) {
+                    terminal.dataset.hasOlder = "false"
+                    return
+                }
+
+                terminal.dataset.loadingOlder = "true"
+                const previousHeight = terminal.scrollHeight
+
+                try {
+                    const response = await fetch(`/actions/partials/grunts/terminal/messages?id=${encodeURIComponent(terminal.dataset.gruntId)}&limit=100&before=${encodeURIComponent(before)}`)
+                    if (!response.ok) {
+                        return
+                    }
+
+                    const html = await response.text()
+                    if (!html.trim()) {
+                        terminal.dataset.hasOlder = "false"
+                        return
+                    }
+
+                    const wrapper = document.createElement("div")
+                    wrapper.innerHTML = html
+
+                    const nodes = Array.from(wrapper.childNodes)
+                    terminal.prepend(...nodes)
+
+                    const heightDelta = terminal.scrollHeight - previousHeight
+                    terminal.scrollTop += heightDelta
+
+                    const hasLoadHint = wrapper.querySelector("[data-terminal-load-more]")
+                    if (!hasLoadHint) {
+                        terminal.dataset.hasOlder = "false"
+                    }
+
+                    syncTerminalState(terminal)
+                } finally {
+                    terminal.dataset.loadingOlder = "false"
+                }
             }
 
             if (document.readyState === "loading") {
@@ -174,23 +249,45 @@ templ GruntView(grunt *bonfirec2.Grunt) {
                         return
                     }
 
-                    target.scrollTop = target.scrollHeight
+                    const previousLatest = target.dataset.latestCreatedAt || ""
+                    syncTerminalState(target)
+                    const nextLatest = target.dataset.latestCreatedAt || ""
+                    const hasInitialMessages = previousLatest === "" && nextLatest !== ""
+                    const hasNewMessages = previousLatest !== "" && previousLatest !== nextLatest
+
+                    if (hasInitialMessages || hasNewMessages) {
+                        target.scrollTop = target.scrollHeight
+                    }
+
+                    if (!target.__gruntScrollBound) {
+                        target.__gruntScrollBound = true
+                        target.addEventListener("scroll", () => {
+                            if (target.scrollTop <= 24) {
+                                loadOlderMessages(target)
+                            }
+                        })
+                    }
                 })
             }
         })()
     </script>
 }
 
-templ GruntTerminalMessages(grunt *bonfirec2.Grunt) {
-    if messages, err := grunt.GetMessages(); err == nil {
-        if len(messages) == 0 {
-            <div class="text-emerald-700">No output yet.</div>
+templ GruntTerminalMessages(grunt *bonfirec2.Grunt, limit int, before string, after string) {
+    if page, err := grunt.GetMessagesPage(limit, before, after); err == nil {
+        if page.HasOlder {
+            <div class="mb-3 text-center text-xs text-slate-500" data-terminal-load-more="true">Scroll up to load older messages</div>
         }
-        for _, message := range messages {
+        if len(page.Messages) == 0 {
+            if before == "" && after == "" {
+                <div class="text-emerald-700" data-terminal-empty="true">No output yet.</div>
+            }
+        }
+        for _, message := range page.Messages {
             if message.IsServerMessage {
-                <div class="whitespace-pre-wrap break-words text-cyan-300">operator> {message.Content}</div>
+                <div class="whitespace-pre-wrap break-words text-cyan-300" data-message-created-at={ message.CreatedAt }>operator> {message.Content}</div>
             } else {
-                <div class="whitespace-pre-wrap break-words text-emerald-200">grunt> {message.Content}</div>
+                <div class="whitespace-pre-wrap break-words text-emerald-200" data-message-created-at={ message.CreatedAt }>grunt> {message.Content}</div>
             }
         }
     } else {

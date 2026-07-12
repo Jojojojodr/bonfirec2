@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/Jojojojodr/bonfirec2"
 	"github.com/Jojojojodr/bonfirec2/web"
@@ -60,15 +61,21 @@ func GruntTerminalMessagesPartial(c *gin.Context) {
 		return
 	}
 
+	limit := 100
+	if rawLimit := c.Query("limit"); rawLimit != "" {
+		if parsedLimit, err := strconv.Atoi(rawLimit); err == nil && parsedLimit > 0 {
+			limit = parsedLimit
+		}
+	}
+
 	c.Status(http.StatusOK)
-	components.GruntTerminalMessages(grunt).Render(c.Request.Context(), c.Writer)
+	components.GruntTerminalMessages(grunt, limit, c.Query("before"), c.Query("after")).Render(c.Request.Context(), c.Writer)
 }
 
 func NotFound(c *gin.Context) {
 	c.Status(http.StatusNotFound)
 	web.NotFound().Render(c.Request.Context(), c.Writer)
 }
-
 
 func DashboardNotificationsPartial(c *gin.Context) {
 	c.Status(http.StatusOK)

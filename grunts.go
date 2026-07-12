@@ -2,11 +2,19 @@ package bonfirec2
 
 import (
 	"log"
+	"strings"
 	"time"
 
 	"github.com/Jojojojodr/bonfirec2/models"
 	"github.com/google/uuid"
 )
+
+type GruntMessagePage struct {
+	Messages []*models.Message
+	HasOlder bool
+	OldestAt string
+	NewestAt string
+}
 
 var Grunts = make(map[string]*Grunt)
 
@@ -42,13 +50,69 @@ func (g *Grunt) Delete() error {
 }
 
 func (g *Grunt) GetMessages() ([]*models.Message, error) {
+	page, err := g.GetMessagesPage(100, "", "")
+	if err != nil {
+		return nil, err
+	}
+	return page.Messages, nil
+}
+
+func (g *Grunt) GetMessagesPage(limit int, before, after string) (*GruntMessagePage, error) {
 	db := Data.GetDB()
+	if limit <= 0 {
+		limit = 100
+	}
+
+	query := db.Model(&models.Message{}).Where("sender_id = ? OR receiver_id = ?", g.ID, g.ID)
+	page := &GruntMessagePage{Messages: []*models.Message{}}
+
+	trimBefore := strings.TrimSpace(before)
+	trimAfter := strings.TrimSpace(after)
+
+	if trimAfter != "" {
+		var messages []*models.Message
+		if err := query.Where("created_at > ?", trimAfter).
+			Order("created_at ASC").Limit(limit + 1).Find(&messages).Error; err != nil {
+			log.Printf("Failed to retrieve messages from database: %v", err)
+			return nil, err
+		}
+		if len(messages) > limit {
+			messages = messages[:limit]
+		}
+		page.Messages = messages
+		if len(messages) > 0 {
+			page.OldestAt = messages[0].CreatedAt
+			page.NewestAt = messages[len(messages)-1].CreatedAt
+		} else {
+			page.NewestAt = trimAfter
+		}
+		return page, nil
+	}
+
 	var messages []*models.Message
-	if err := db.Where("sender_id = ? OR receiver_id = ?", g.ID, g.ID).Order("created_at ASC").Find(&messages).Error; err != nil {
+	if trimBefore != "" {
+		query = query.Where("created_at < ?", trimBefore)
+	}
+	if err := query.Order("created_at DESC").Limit(limit + 1).Find(&messages).Error; err != nil {
 		log.Printf("Failed to retrieve messages from database: %v", err)
 		return nil, err
 	}
-	return messages, nil
+
+	if len(messages) > limit {
+		page.HasOlder = true
+		messages = messages[:limit]
+	}
+
+	for left, right := 0, len(messages)-1; left < right; left, right = left+1, right-1 {
+		messages[left], messages[right] = messages[right], messages[left]
+	}
+
+	page.Messages = messages
+	if len(messages) > 0 {
+		page.OldestAt = messages[0].CreatedAt
+		page.NewestAt = messages[len(messages)-1].CreatedAt
+	}
+	return page, nil
 }
 
 func NewGrunt(id, listenerID, address, status, lastCheckIn string) *Grunt {
