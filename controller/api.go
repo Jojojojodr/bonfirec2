@@ -19,9 +19,20 @@ func GetHealth(c *gin.Context) {
 }
 
 func GetListeners(c *gin.Context) {
-	listeners := make([]*bonfirec2.Listener, 0, len(bonfirec2.Listeners))
+	type listenerResponse struct {
+		ID       string `json:"id"`
+		Port     string `json:"port"`
+		Status   string `json:"status"`
+	}
+	listeners := make([]*listenerResponse, 0, len(bonfirec2.Listeners))
 	for _, listener := range bonfirec2.Listeners {
-		listeners = append(listeners, listener)
+		resp := &listenerResponse{
+			ID:       listener.ID,
+			Port:     listener.Port,
+			Status:   listener.Status,
+		}
+
+		listeners = append(listeners, resp)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
