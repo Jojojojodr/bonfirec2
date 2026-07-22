@@ -79,6 +79,10 @@ jobs:
         run: |
           npm install
           go mod download
+          go install github.com/a-h/templ/cmd/templ@v0.3.1020
+    
+      - name: Generate Templ files
+        run: templ generate
 
       - name: Build Tailwind CSS
         run: npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/styles.css --minify
