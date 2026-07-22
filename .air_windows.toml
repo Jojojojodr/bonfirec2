@@ -4,7 +4,7 @@ tmp_dir = "tmp"
 
 [build]
   bin = "tmp/air.exe"
-  cmd = "templ generate && go build -o ./tmp/air.exe ./cmd/app/main.go"
+  cmd = "templ generate; go build -o ./tmp/air.exe ./cmd/app/main.go"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata", "scripts", "tasks", "node_modules"]
   exclude_regex = ["_test.go", "_templ.go"]
