@@ -8,3 +8,4 @@ package-lock.json
 config.yaml
 
 **/styles.css
+web/**/*_templ.go
