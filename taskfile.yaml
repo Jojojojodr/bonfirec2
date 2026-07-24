@@ -22,7 +22,7 @@ tasks:
   client:
     cmds:
       - echo "Starting client application..."
-      - go run {{.GO_CLIENT_PATH}}
+      - go run {{.GO_CLIENT_PATH}} {{.CLI_ARGS}}
     silent: true
 
   build:
@@ -46,7 +46,7 @@ tasks:
   run-client:
     cmds:
       - echo "Running client application..."
-      - cd ./{{.EXECUTABLE_CLIENT_PATH}} && ./{{.EXECUTABLE_CLIENT_NAME}}
+      - cd ./{{.EXECUTABLE_CLIENT_PATH}} && ./{{.EXECUTABLE_CLIENT_NAME}} {{.CLI_ARGS}}
     silent: true
 
   dev:
