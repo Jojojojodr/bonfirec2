@@ -2,10 +2,13 @@ package router
 
 import (
 	"github.com/Jojojojodr/bonfirec2/controller"
+	"github.com/Jojojojodr/bonfirec2/middleware"
+
 	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter(router *gin.Engine) *gin.Engine {
+	router.Use(middleware.LoggingMiddleware)
 	router.Static("/static", "./static")
 
 	router.GET("/", controller.HomeView)
@@ -30,7 +33,7 @@ func SetupApiRouter(router *gin.Engine) *gin.Engine {
 	api.GET("/messages", controller.GetLatestMessages)
 	api.GET("/logs", controller.GetEventLogs)
 	api.POST("/logs/export", controller.ExportEventLogs)
-	api.POST("/upload", controller.UploadFile)
+	api.POST("/upload", middleware.ValidateUploadFile, controller.UploadFile)
 
 	tasks := api.Group("/tasks")
 	tasks.GET("/", controller.GetTasks)

@@ -212,6 +212,17 @@ func LogTaskWaiting(task *Task, reason string) error {
 	)
 }
 
+func LogRequest(requestMethod, details string) error {
+	return logEvent(
+		"request_received",
+		"info",
+		fmt.Sprintf("Received request '%s': %s", requestMethod, details),
+		"",
+		"",
+		"",
+	)
+}
+
 func logEvent(eventType, severity, message, listenerID, gruntID, taskID string) error {
 	if Data == nil {
 		return nil
