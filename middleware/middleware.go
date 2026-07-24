@@ -21,6 +21,11 @@ var allowedUploadExtensions = map[string]struct{}{
 const maxUploadFileSize int64 = 10 << 20
 
 func LoggingMiddleware(c *gin.Context) {
+	if strings.HasPrefix(c.Request.URL.Path, "/static") || strings.HasPrefix(c.Request.URL.Path, "/actions/partials") {
+		c.Next()
+		return
+	}
+
 	start := time.Now()
 
 	c.Next()
