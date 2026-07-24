@@ -30,6 +30,7 @@ func SetupApiRouter(router *gin.Engine) *gin.Engine {
 	api.GET("/messages", controller.GetLatestMessages)
 	api.GET("/logs", controller.GetEventLogs)
 	api.POST("/logs/export", controller.ExportEventLogs)
+	api.POST("/upload", controller.UploadFile)
 
 	tasks := api.Group("/tasks")
 	tasks.GET("/", controller.GetTasks)

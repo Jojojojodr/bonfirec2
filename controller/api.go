@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"io"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -279,5 +282,45 @@ func ExportEventLogs(c *gin.Context) {
 		"message":   "logs exported",
 		"format":    format,
 		"file_path": filePath,
+	})
+}
+
+func UploadFile(c *gin.Context) {
+	fileHeader, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "file is required"})
+		return
+	}
+
+	uploadDir := "./data/uploads"
+	if err := os.MkdirAll(uploadDir, 0o755); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create upload directory"})
+		return
+	}
+
+	src, err := fileHeader.Open()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to open uploaded file"})
+		return
+	}
+	defer src.Close()
+
+	dstPath := filepath.Join(uploadDir, filepath.Base(fileHeader.Filename))
+	dst, err := os.Create(dstPath)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create destination file"})
+		return
+	}
+	defer dst.Close()
+
+	if _, err := io.Copy(dst, src); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to save uploaded file"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message":  "file uploaded successfully",
+		"filename": fileHeader.Filename,
+		"path":     dstPath,
 	})
 }
